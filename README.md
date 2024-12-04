@@ -36,17 +36,14 @@ Contact 22120199 email hcmus to obtain keys values
 
 ## Usage with frontend
 1. cd views
-    ```Live Server from index.js
-    
-2. use js FE to rewrite the value
-
-## Usage with backend
-1. Build the CSS using Tailwind:
     ```sh
     npm run build:css
     ```
 
-2. Start the development server:
+2. Go live server or something like that to run index.html
+
+## Usage with backend
+1. Start the development server:
     ```sh
     npm run dev
     ```
