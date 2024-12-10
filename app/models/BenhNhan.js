@@ -1,66 +1,66 @@
 module.exports = (sequelize, DataTypes) => {
-    const BenhNhan = sequelize.define('BenhNhan', {
-      MaBenhNhan: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-      },
-      HoTen: {
-        type: DataTypes.STRING(50),
-        allowNull: false
-      },
-      GioiTinh: {
-        type: DataTypes.STRING(3),
-        allowNull: false,
-        validate: {
-          isIn: [['Nam', 'Nữ']]
-        }
-      },
-      DiaChi: {
-        type: DataTypes.STRING(200),
-        allowNull: false
-      },
-      NgaySinh: {
-        type: DataTypes.DATE,
-        allowNull: false
-      },
-      NgheNghiep: {
-        type: DataTypes.STRING(50),
-        allowNull: true
-      },
-      DanToc: {
-        type: DataTypes.STRING(20),
-        allowNull: true
-      },
-      SoDienThoai: {
-        type: DataTypes.CHAR(10),
-        allowNull: true,
-        validate: {
-          len: [10, 10]
-        }
-      },
-      TienSu: {
-        type: DataTypes.TEXT,
-        allowNull: true
-      },
-      DiUng: {
-        type: DataTypes.TEXT,
-        allowNull: true
-      },
-      GhiChu: {
-        type: DataTypes.TEXT,
-        allowNull: true
+  const benhnhan = sequelize.define('benhnhan', {
+    mabenhnhan: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
+    hoten: {
+      type: DataTypes.STRING(50),
+      allowNull: false
+    },
+    gioitinh: {
+      type: DataTypes.STRING(3),
+      allowNull: false,
+      validate: {
+        isIn: [['Nam', 'Nữ']]
       }
-    }, {
-      tableName: 'BenhNhan',
-      timestamps: false
+    },
+    diachi: {
+      type: DataTypes.STRING(200),
+      allowNull: false
+    },
+    ngaysinh: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    nghenghiep: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    dantoc: {
+      type: DataTypes.STRING(20),
+      allowNull: true
+    },
+    sodienthoai: {
+      type: DataTypes.CHAR(10),
+      allowNull: true,
+      validate: {
+        len: [10, 10]
+      }
+    },
+    tiensu: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    diung: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    ghichu: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    }
+  }, {
+    tableName: 'benhnhan',
+    timestamps: false
+  });
+
+  benhnhan.associate = function(models) {
+    benhnhan.hasMany(models.phieukhambenh, {
+      foreignKey: 'mabenhnhan'
     });
-  
-    BenhNhan.associate = function(models) {
-      BenhNhan.hasMany(models.PhieuKhamBenh, {
-        foreignKey: 'MaBenhNhan'
-      });
-    };
-  
-    return BenhNhan;
   };
+
+  return benhnhan;
+};

@@ -1,36 +1,36 @@
 module.exports = (sequelize, DataTypes) => {
-    const LoaiBenhTrongPhieuKham = sequelize.define('LoaiBenhTrongPhieuKham', {
-      MaPhieuKham: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-          model: 'PhieuKhamBenh',
-          key: 'MaPhieuKham'
-        }
-      },
-      MaLoaiBenh: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-          model: 'LoaiBenh',
-          key: 'MaLoaiBenh'
-        }
+  const loaibenhtrongphieukham = sequelize.define('loaibenhtrongphieukham', {
+    maphieukham: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      references: {
+        model: 'phieukhambenh',
+        key: 'maphieukham'
       }
-    }, {
-      tableName: 'LoaiBenhTrongPhieuKham',
-      timestamps: false
+    },
+    maloaibenh: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      references: {
+        model: 'loaibenh',
+        key: 'maloaibenh'
+      }
+    }
+  }, {
+    tableName: 'loaibenhtrongphieukham',
+    timestamps: false
+  });
+
+  loaibenhtrongphieukham.associate = function(models) {
+    loaibenhtrongphieukham.belongsTo(models.phieukhambenh, {
+      foreignKey: 'maphieukham',
+      targetKey: 'maphieukham'
     });
-  
-    LoaiBenhTrongPhieuKham.associate = function(models) {
-      LoaiBenhTrongPhieuKham.belongsTo(models.PhieuKhamBenh, {
-        foreignKey: 'MaPhieuKham',
-        targetKey: 'MaPhieuKham'
-      });
-      LoaiBenhTrongPhieuKham.belongsTo(models.LoaiBenh, {
-        foreignKey: 'MaLoaiBenh',
-        targetKey: 'MaLoaiBenh'
-      });
-    };
-  
-    return LoaiBenhTrongPhieuKham;
+    loaibenhtrongphieukham.belongsTo(models.loaibenh, {
+      foreignKey: 'maloaibenh',
+      targetKey: 'maloaibenh'
+    });
   };
+
+  return loaibenhtrongphieukham;
+};

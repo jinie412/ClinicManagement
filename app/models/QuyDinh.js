@@ -1,55 +1,55 @@
 module.exports = (sequelize, DataTypes) => {
-    const QuyDinh = sequelize.define('QuyDinh', {
-      MaQuyDinh: {
-        type: DataTypes.INTEGER,
-        primaryKey: true
-      },
-      SoLuongBenhNhanToiDa: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-          min: 1
-        }
-      },
-      SoLuongLoaiBenh: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-          min: 1
-        }
-      },
-      SoLuongLoaiThuoc: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-          min: 1
-        }
-      },
-      SoLuongLoaiDonVi: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-          min: 1
-        }
-      },
-      SoLuongCachDung: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-          min: 1
-        }
-      },
-      TienKham: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-        validate: {
-          min: 0.01
-        }
+  const quydinh = sequelize.define('quydinh', {
+    maquydinh: {
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
+    soluongbenhnhantoida: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: 1
       }
-    }, {
-      tableName: 'QuyDinh',
-      timestamps: false
-    });
-  
-    return QuyDinh;
-  };
+    },
+    soluongloaibenh: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: 1
+      }
+    },
+    soluongloaithuoc: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: 1
+      }
+    },
+    soluongloaidonvi: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: 1
+      }
+    },
+    soluongcachdung: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: 1
+      }
+    },
+    tienkham: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      validate: {
+        min: 0.01
+      }
+    }
+  }, {
+    tableName: 'quydinh',
+    timestamps: false
+  });
+
+  return quydinh;
+};

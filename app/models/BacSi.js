@@ -1,35 +1,35 @@
 module.exports = (sequelize, DataTypes) => {
-  const BacSi = sequelize.define('BacSi', {
-    MaBacSi: {
+  const bacsi = sequelize.define('bacsi', {
+    mabacsi: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true
     },
-    HoTen: {
+    hoten: {
       type: DataTypes.STRING(50),
       allowNull: false
     },
-    Email: {
+    email: {
       type: DataTypes.STRING(50),
       allowNull: false,
       unique: true
     },
-    TinhThanhPho: {
+    tinhthanhpho: {
       type: DataTypes.STRING(100),
       allowNull: true
     },
-    GioiTinh: {
+    gioitinh: {
       type: DataTypes.STRING(3),
       allowNull: true,
       validate: {
-        isIn: [['Nam', 'Nữ']]
+        isIn: [['nam', 'nữ']]
       }
     },
-    NgaySinh: {
+    ngaysinh: {
       type: DataTypes.DATE,
       allowNull: true
     },
-    SoDienThoai: {
+    sodienthoai: {
       type: DataTypes.CHAR(10),
       allowNull: false,
       unique: true,
@@ -37,26 +37,26 @@ module.exports = (sequelize, DataTypes) => {
         len: [10, 10]
       }
     },
-    TenTaiKhoan: {
+    tentaikhoan: {
       type: DataTypes.STRING(50),
       allowNull: false,
       unique: true,
       references: {
-        model: 'TaiKhoan',
-        key: 'TenTaiKhoan'
+        model: 'taikhoan',
+        key: 'tentaikhoan'
       }
     }
   }, {
-    tableName: 'BacSi',
+    tableName: 'bacsi',
     timestamps: false
   });
 
-  BacSi.associate = function(models) {
-    BacSi.belongsTo(models.TaiKhoan, {
-      foreignKey: 'TenTaiKhoan',
-      targetKey: 'TenTaiKhoan'
+  bacsi.associate = function(models) {
+    bacsi.belongsTo(models.taikhoan, {
+      foreignKey: 'tentaikhoan',
+      targetKey: 'tentaikhoan'
     });
   };
 
-  return BacSi;
+  return bacsi;
 };

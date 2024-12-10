@@ -1,32 +1,32 @@
 module.exports = (sequelize, DataTypes) => {
-    const CanLamSang = sequelize.define('CanLamSang', {
-      MaPhieuKham: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-          model: 'PhieuKhamBenh',
-          key: 'MaPhieuKham'
-        }
-      },
-      TenCanLamSang: {
-        type: DataTypes.STRING(255),
-        primaryKey: true
-      },
-      KetQua: {
-        type: DataTypes.TEXT,
-        allowNull: true
+  const canlamsang = sequelize.define('canlamsang', {
+    maphieukham: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      references: {
+        model: 'phieukhambenh',
+        key: 'maphieukham'
       }
-    }, {
-      tableName: 'CanLamSang',
-      timestamps: false
+    },
+    tencanlamsang: {
+      type: DataTypes.STRING(255),
+      primaryKey: true
+    },
+    ketqua: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    }
+  }, {
+    tableName: 'canlamsang',
+    timestamps: false
+  });
+
+  canlamsang.associate = function(models) {
+    canlamsang.belongsTo(models.phieukhambenh, {
+      foreignKey: 'maphieukham',
+      targetKey: 'maphieukham'
     });
-  
-    CanLamSang.associate = function(models) {
-      CanLamSang.belongsTo(models.PhieuKhamBenh, {
-        foreignKey: 'MaPhieuKham',
-        targetKey: 'MaPhieuKham'
-      });
-    };
-  
-    return CanLamSang;
   };
+
+  return canlamsang;
+};

@@ -1,40 +1,40 @@
 module.exports = (sequelize, DataTypes) => {
-    const ToaThuoc = sequelize.define('ToaThuoc', {
-      MaPhieuKham: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-          model: 'PhieuKhamBenh',
-          key: 'MaPhieuKham'
-        }
-      },
-      MaThuoc: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-          model: 'Thuoc',
-          key: 'MaThuoc'
-        }
-      },
-      SoLuong: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+  const toathuoc = sequelize.define('toathuoc', {
+    maphieukham: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      references: {
+        model: 'phieukhambenh',
+        key: 'maphieukham'
       }
-    }, {
-      tableName: 'ToaThuoc',
-      timestamps: false
+    },
+    mathuoc: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      references: {
+        model: 'thuoc',
+        key: 'mathuoc'
+      }
+    },
+    soluong: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
+  }, {
+    tableName: 'toathuoc',
+    timestamps: false
+  });
+
+  toathuoc.associate = function(models) {
+    toathuoc.belongsTo(models.phieukhambenh, {
+      foreignKey: 'maphieukham',
+      targetKey: 'maphieukham'
     });
-  
-    ToaThuoc.associate = function(models) {
-      ToaThuoc.belongsTo(models.PhieuKhamBenh, {
-        foreignKey: 'MaPhieuKham',
-        targetKey: 'MaPhieuKham'
-      });
-      ToaThuoc.belongsTo(models.Thuoc, {
-        foreignKey: 'MaThuoc',
-        targetKey: 'MaThuoc'
-      });
-    };
-  
-    return ToaThuoc;
+    toathuoc.belongsTo(models.thuoc, {
+      foreignKey: 'mathuoc',
+      targetKey: 'mathuoc'
+    });
   };
+
+  return toathuoc;
+};

@@ -1,36 +1,36 @@
 module.exports = (sequelize, DataTypes) => {
-    const CachDungThuoc = sequelize.define('CachDungThuoc', {
-      MaThuoc: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-          model: 'Thuoc',
-          key: 'MaThuoc'
-        }
-      },
-      MaCachDung: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-          model: 'CachDung',
-          key: 'MaCachDung'
-        }
+  const cachdungthuoc = sequelize.define('cachdungthuoc', {
+    mathuoc: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      references: {
+        model: 'thuoc',
+        key: 'mathuoc'
       }
-    }, {
-      tableName: 'CachDungThuoc',
-      timestamps: false
+    },
+    macachdung: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      references: {
+        model: 'cachdung',
+        key: 'macachdung'
+      }
+    }
+  }, {
+    tableName: 'cachdungthuoc',
+    timestamps: false
+  });
+
+  cachdungthuoc.associate = function(models) {
+    cachdungthuoc.belongsTo(models.thuoc, {
+      foreignKey: 'mathuoc',
+      targetKey: 'mathuoc'
     });
-  
-    CachDungThuoc.associate = function(models) {
-      CachDungThuoc.belongsTo(models.Thuoc, {
-        foreignKey: 'MaThuoc',
-        targetKey: 'MaThuoc'
-      });
-      CachDungThuoc.belongsTo(models.CachDung, {
-        foreignKey: 'MaCachDung',
-        targetKey: 'MaCachDung'
-      });
-    };
-  
-    return CachDungThuoc;
+    cachdungthuoc.belongsTo(models.cachdung, {
+      foreignKey: 'macachdung',
+      targetKey: 'macachdung'
+    });
   };
+
+  return cachdungthuoc;
+};

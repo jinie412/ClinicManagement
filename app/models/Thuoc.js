@@ -1,60 +1,60 @@
 module.exports = (sequelize, DataTypes) => {
-    const Thuoc = sequelize.define('Thuoc', {
-      MaThuoc: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-      },
-      TenThuoc: {
-        type: DataTypes.STRING(255),
-        allowNull: false
-      },
-      SoLuongNhap: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-          min: 0
-        }
-      },
-      SoLuongCon: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-          min: 0
-        }
-      },
-      DonGia: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-        validate: {
-          min: 0.01
-        }
-      },
-      MaDonVi: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'DonViTinh',
-          key: 'MaDonVi'
-        }
+  const thuoc = sequelize.define('thuoc', {
+    mathuoc: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
+    tenthuoc: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
+    soluongnhap: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: 0
       }
-    }, {
-      tableName: 'Thuoc',
-      timestamps: false
+    },
+    soluongcon: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: 0
+      }
+    },
+    dongia: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      validate: {
+        min: 0.01
+      }
+    },
+    madonvi: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'donvitinh',
+        key: 'madonvi'
+      }
+    }
+  }, {
+    tableName: 'thuoc',
+    timestamps: false
+  });
+
+  thuoc.associate = function(models) {
+    thuoc.belongsTo(models.donvitinh, {
+      foreignKey: 'madonvi',
+      targetKey: 'madonvi'
     });
-  
-    Thuoc.associate = function(models) {
-      Thuoc.belongsTo(models.DonViTinh, {
-        foreignKey: 'MaDonVi',
-        targetKey: 'MaDonVi'
-      });
-      Thuoc.hasMany(models.CachDungThuoc, {
-        foreignKey: 'MaThuoc'
-      });
-      Thuoc.hasMany(models.ToaThuoc, {
-        foreignKey: 'MaThuoc'
-      });
-    };
-  
-    return Thuoc;
+    thuoc.hasMany(models.cachdungthuoc, {
+      foreignKey: 'mathuoc'
+    });
+    thuoc.hasMany(models.toathuoc, {
+      foreignKey: 'mathuoc'
+    });
   };
+
+  return thuoc;
+};

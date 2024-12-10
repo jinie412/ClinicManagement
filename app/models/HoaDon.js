@@ -1,30 +1,30 @@
 module.exports = (sequelize, DataTypes) => {
-    const HoaDon = sequelize.define('HoaDon', {
-      MaPhieuKham: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        references: {
-          model: 'PhieuKhamBenh',
-          key: 'MaPhieuKham'
-        },
-        onDelete: 'CASCADE'
+  const hoadon = sequelize.define('hoadon', {
+    maphieukham: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      references: {
+        model: 'phieukhambenh',
+        key: 'maphieukham'
       },
-      TongTien: {
-        type: DataTypes.FLOAT,
-        allowNull: false
-      }
-    }, {
-      tableName: 'HoaDon',
-      timestamps: false
+      onDelete: 'CASCADE'
+    },
+    tongtien: {
+      type: DataTypes.FLOAT,
+      allowNull: false
+    }
+  }, {
+    tableName: 'hoadon',
+    timestamps: false
+  });
+
+  hoadon.associate = function(models) {
+    hoadon.belongsTo(models.phieukhambenh, {
+      foreignKey: 'maphieukham',
+      targetKey: 'maphieukham',
+      onDelete: 'CASCADE'
     });
-  
-    HoaDon.associate = function(models) {
-      HoaDon.belongsTo(models.PhieuKhamBenh, {
-        foreignKey: 'MaPhieuKham',
-        targetKey: 'MaPhieuKham',
-        onDelete: 'CASCADE'
-      });
-    };
-  
-    return HoaDon;
   };
+
+  return hoadon;
+};
