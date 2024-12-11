@@ -38,6 +38,9 @@ db.sequelize.sync()
 const benhnhanRouter = require('./app/components/BenhNhan/benhnhanRouter');
 app.use('/api/benhnhan', benhnhanRouter);
 
+// const routerMain = require('./app/routers/routerMain');
+// app.use('/', routerMain);
+
 const port = 3000 || process.env.PORT;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
