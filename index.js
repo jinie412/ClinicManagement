@@ -39,6 +39,9 @@ db.sequelize.sync()
 const benhnhanRouter = require('./app/components/BenhNhan/benhnhanRouter');
 app.use('/api/benhnhan', benhnhanRouter);
 
+const bacsiRouter = require('./app/components/BacSi/bacsiRouter');
+app.use('/api/bacsi', bacsiRouter);
+
 // const routerMain = require('./app/routers/routerMain');
 // app.use('/', routerMain);
 

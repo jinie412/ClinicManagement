@@ -1,6 +1,14 @@
-const {bacsi } = require('../../models/model.index');
+const {bacsi, taikhoan } = require('../../models/model.index');
 
 module.exports = {
+    login: async (data) => {
+        return await taikhoan.findOne({
+            where: {
+                tentaikhoan: data.username,
+                matkhau: data.password
+            }
+        });
+    },
     getBacsis: async () => {
         return await bacsi.findAll();
     },
