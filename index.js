@@ -3,11 +3,13 @@ require('pg');
 const express = require('express');
 const sequelize = require('./app/config/postgreDB');
 const db = require('./app/models/model.index');
+const cors = require('cors');
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 // Import and use helmet
 const helmet = require('helmet');
@@ -33,7 +35,6 @@ db.sequelize.sync()
   .catch(err => {
     console.error('Error syncing database:', err);
 });
-
 
 const benhnhanRouter = require('./app/components/BenhNhan/benhnhanRouter');
 app.use('/api/benhnhan', benhnhanRouter);

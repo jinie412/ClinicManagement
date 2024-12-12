@@ -3,7 +3,20 @@ const benhnhanService = require('./benhnhanService');
 exports.getBenhNhans = async (req, res) => {
     try {
         const benhnhans = await benhnhanService.getBenhNhans();
-        res.status(200).json(benhnhans);
+        const renamedBenhNhans = benhnhans.map(benhnhan => ({
+            // ...benhnhan,
+            id: benhnhan.mabenhnhan.toString(),
+            name: benhnhan.hoten,
+            gender: benhnhan.gioitinh,
+            ethnicity: benhnhan.dantoc,
+            birthDate: benhnhan.ngaysinh,
+            address: benhnhan.diachi,
+            phone: benhnhan.sodienthoai,
+            job: benhnhan.nghenghiep,
+            notes: benhnhan.ghichu,
+          }));
+        res.status(200).json(renamedBenhNhans);
+
     } catch (error) {
         res.status(500).json(error);
     }

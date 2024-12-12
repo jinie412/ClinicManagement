@@ -1,3 +1,29 @@
+<!-- <!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../public/css/tailwind.css" rel="stylesheet">
+</head>
+<body>
+  <h1 class="text-3xl border font-bold text-red-700 underline">
+    Hello world!
+  </h1>
+  <p class="text-blue-500 text-xl">hi 123</p>
+  <script>
+    fetch("/api/benhnhan")
+    .then((response) => {
+      console.log('Response:', response);
+      return response;
+    })
+    .then((patients) => {
+      console.log('Data received:', patients);
+    })
+  </script>
+</body>
+
+</html> -->
+
 <!doctype html>
 <html>
 <head>
@@ -10,5 +36,35 @@
     Hello world!
   </h1>
   <p class="text-blue-500 text-xl">hi 123</p>
+
+  <!-- Thêm khu vực hiển thị dữ liệu API -->
+  <div id="data-container" class="mt-4 p-4 border rounded bg-gray-100">
+    <h2 class="text-2xl font-semibold">Fetched Data:</h2>
+    <pre id="response-data" class="text-sm bg-white p-2 border rounded"></pre>
+  </div>
+
+  <script>
+    // Gọi API
+    fetch("http://localhost:3000/api/benhnhan")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json(); // Đọc dữ liệu dưới dạng JSON
+      })
+      .then((patients) => {
+        console.log('Data received:', patients);
+        // Hiển thị dữ liệu lên giao diện
+        const dataContainer = document.getElementById("response-data");
+        dataContainer.textContent = JSON.stringify(patients, null, 2);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+
+        // Hiển thị lỗi lên giao diện
+        const dataContainer = document.getElementById("response-data");
+        dataContainer.textContent = `Error fetching data: ${error.message}`;
+      });
+  </script>
 </body>
 </html>
