@@ -1,3 +1,5 @@
+const { on } = require("nodemon");
+
 module.exports = (sequelize, DataTypes) => {
   const benhnhan = sequelize.define('benhnhan', {
     mabenhnhan: {
@@ -58,7 +60,9 @@ module.exports = (sequelize, DataTypes) => {
 
   benhnhan.associate = function(models) {
     benhnhan.hasMany(models.phieukhambenh, {
-      foreignKey: 'mabenhnhan'
+      foreignKey: 'mabenhnhan',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
     });
   };
 

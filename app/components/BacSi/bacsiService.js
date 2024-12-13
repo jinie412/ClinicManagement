@@ -1,23 +1,23 @@
 const {bacsi } = require('../../models/model.index');
 
 module.exports = {
-    getBacsis: async () => {
+    getBacSis: async () => {
         return await bacsi.findAll();
     },
-    getBacsiById: async (id) => {
+    getBacSiById: async (id) => {
         return await bacsi.findByPk(id);
     },
-    createBacsi: async (data) => {
+    createBacSi: async (data) => {
         return await bacsi.create(data);
     },
-    updateBacsi: async (id, data) => {
+    updateBacSi: async (id, data) => {
         const bacsi = await bacsi.findByPk(id);
         if (bacsi) {
             return await bacsi.update(data);
         }
         return null;
     },
-    deleteBacsi: async (id) => {
+    deleteBacSi: async (id) => {
         const bacsi = await bacsi.findByPk(id);
         if (bacsi) {
             await bacsi.destroy();

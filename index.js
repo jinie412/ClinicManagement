@@ -36,8 +36,13 @@ db.sequelize.sync()
     console.error('Error syncing database:', err);
 });
 
-const benhnhanRouter = require('./app/components/BenhNhan/benhnhanRouter');
-app.use('/api/benhnhan', benhnhanRouter);
+// const benhnhanRouter = require('./app/components/BenhNhan/benhnhanRouter');
+// app.use('/api/benhnhan', benhnhanRouter);
+// const phieukhambenhRouter = require('./app/components/PhieuKhamBenh/phieukhambenhRouter');
+// app.use('/api/phieukhambenh', phieukhambenhRouter);
+
+const router = require('./app/routers/routerMain');
+app.use('/', router);
 
 // const routerMain = require('./app/routers/routerMain');
 // app.use('/', routerMain);

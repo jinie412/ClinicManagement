@@ -1,27 +1,30 @@
 const benhnhanService = require('./benhnhanService');
 
+// GET /api/benhnhan
 exports.getBenhNhans = async (req, res) => {
     try {
         const benhnhans = await benhnhanService.getBenhNhans();
-        const renamedBenhNhans = benhnhans.map(benhnhan => ({
-            // ...benhnhan,
-            id: benhnhan.mabenhnhan.toString(),
-            name: benhnhan.hoten,
-            gender: benhnhan.gioitinh,
-            ethnicity: benhnhan.dantoc,
-            birthDate: benhnhan.ngaysinh,
-            address: benhnhan.diachi,
-            phone: benhnhan.sodienthoai,
-            job: benhnhan.nghenghiep,
-            notes: benhnhan.ghichu,
-          }));
-        res.status(200).json(renamedBenhNhans);
+        res.status(200).json(benhnhans);
+        // const renamedBenhNhans = benhnhans.map(benhnhan => ({
+        //     // ...benhnhan,
+        //     id: benhnhan.mabenhnhan.toString(),
+        //     name: benhnhan.hoten,
+        //     gender: benhnhan.gioitinh,
+        //     ethnicity: benhnhan.dantoc,
+        //     birthDate: benhnhan.ngaysinh,
+        //     address: benhnhan.diachi,
+        //     phone: benhnhan.sodienthoai,
+        //     job: benhnhan.nghenghiep,
+        //     notes: benhnhan.ghichu,
+        //   }));
+        // res.status(200).json(renamedBenhNhans);
 
     } catch (error) {
         res.status(500).json(error);
     }
 };
 
+// GET /api/benhnhan/:id
 exports.getBenhNhanById = async (req, res) => {
     try {
         const benhnhan = await benhnhanService.getBenhNhanById(req.params.id);
@@ -35,6 +38,7 @@ exports.getBenhNhanById = async (req, res) => {
     }
 };
 
+// POST /api/benhnhan/them-benh-nhan
 exports.createBenhNhan = async (req, res) => {
     try {
         const benhnhan = await benhnhanService.createBenhNhan(req.body);
@@ -44,6 +48,7 @@ exports.createBenhNhan = async (req, res) => {
     }
 };
 
+// PUT /api/benhnhan/:id
 exports.updateBenhNhan = async (req, res) => {
     try {
         const benhnhan = await benhnhanService.updateBenhNhan(req.params.id, req.body);
@@ -57,6 +62,7 @@ exports.updateBenhNhan = async (req, res) => {
     }
 };
 
+// DELETE /api/benhnhan/:id
 exports.deleteBenhNhan = async (req, res) => {
     try {
         const result = await benhnhanService.deleteBenhNhan(req.params.id);
