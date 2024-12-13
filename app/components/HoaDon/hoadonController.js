@@ -1,20 +1,14 @@
-const phieukhambenhService = require('./phieukhambenhService');
+const hoadonService = require('./hoadonService');
 
 module.exports = {
-    // GET /api/phieukhambenh
-    getPhieuKhamBenhs: async (req, res ) =>{
+    // GET /api/hoadon
+    getHoaDons: async (req, res) => {
         try {
-            const phieukhambenhs = await phieukhambenhService.getPhieuKhamBenhs();
-            if (!phieukhambenhs) {
-                return res.status(404).json({
-                    success: false,
-                    message: 'Failed to retrieve list of invoices.'
-                });
-            }
+            const hoadons = await hoadonService.getHoaDons();
             res.status(200).json({
                 success: true,
                 message: 'Retrieved list of invoices successfully.',
-                data: phieukhambenhs
+                data: hoadons
             });
         } catch (error) {
             console.error('Error fetching invoices:', error);
@@ -25,8 +19,9 @@ module.exports = {
             });
         }
     },
-    // GET /api/phieukhambenh/:id
-    getPhieuKhamBenhById: async (req, res) => {
+
+    // GET /api/hoadon/:id
+    getHoaDonById: async (req, res) => {
         try {
             const { id } = req.params;
 
@@ -37,12 +32,12 @@ module.exports = {
                 });
             }
 
-            const phieukhambenh = await phieukhambenhService.getPhieuKhamBenhById(id);
+            const hoadon = await hoadonService.getHoaDonById(id);
 
-            if (phieukhambenh) {
+            if (hoadon) {
                 res.status(200).json({
                     success: true,
-                    data: phieukhambenh
+                    data: hoadon
                 });
             } else {
                 res.status(404).json({
@@ -59,54 +54,62 @@ module.exports = {
             });
         }
     },
-    // POST /api/phieukhambenh/new
-    createPhieuKhamBenh: async (req, res) => {
-        try {
-            const { data } = req.body;
 
-            if (!data) {
+    // POST /api/hoadon/new
+    createHoaDon: async (req, res) => {
+        try {
+            const { body } = req;
+
+            if (!body || Object.keys(body).length === 0) {
                 return res.status(400).json({
                     success: false,
-                    message: 'Data is required to create a new invoice.'
+                    message: 'Invoice data is required to create a new entry.'
                 });
             }
 
-            const newPhieuKhamBenh = await phieukhambenhService.createPhieuKhamBenh(data);
-
+            const hoadon = await hoadonService.createHoaDon(body);
             res.status(201).json({
                 success: true,
-                message: 'Created new invoice successfully.',
-                data: newPhieuKhamBenh
+                data: hoadon,
+                message: 'Invoice created successfully.'
             });
         } catch (error) {
-            console.error('Error creating new invoice:', error);
+            console.error('Error creating invoice:', error);
             res.status(500).json({
                 success: false,
-                message: 'Failed to create new invoice.',
+                message: 'Failed to create invoice.',
                 error: error.message
             });
         }
     },
-    // PUT /api/phieukhambenh/update/:id
-    updatePhieuKhamBenh: async (req, res) => {
+
+    // PUT /api/hoadon/:id
+    updateHoaDon: async (req, res) => {
         try {
             const { id } = req.params;
-            const { data } = req.body;
+            const { body } = req;
 
-            if (!id || !data) {
+            if (!body || Object.keys(body).length === 0) {
                 return res.status(400).json({
                     success: false,
-                    message: 'ID and data are required to update the invoice.'
+                    message: 'Invoice data is required to update.'
                 });
             }
 
-            const updatedPhieuKhamBenh = await phieukhambenhService.updatePhieuKhamBenh(id, data);
+            const hoadon = await hoadonService.updateHoaDon(id, body);
 
-            res.status(200).json({
-                success: true,
-                message: 'Updated invoice successfully.',
-                data: updatedPhieuKhamBenh
-            });
+            if (hoadon) {
+                res.status(200).json({
+                    success: true,
+                    data: hoadon,
+                    message: 'Invoice updated successfully.'
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    message: `Invoice with ID ${id} not found.`
+                });
+            }
         } catch (error) {
             console.error('Error updating invoice:', error);
             res.status(500).json({
@@ -116,8 +119,9 @@ module.exports = {
             });
         }
     },
-    // DELETE /api/phieukhambenh/delete/:id
-    deletePhieuKhamBenh: async (req, res) => {
+
+    // DELETE /api/hoadon/:id
+    deleteHoaDon: async (req, res) => {
         try {
             const { id } = req.params;
 
@@ -128,13 +132,12 @@ module.exports = {
                 });
             }
 
-            const deletedPhieuKhamBenh = await phieukhambenhService.deletePhieuKhamBenh(id);
+            const result = await hoadonService.deleteHoaDon(id);
 
-            if (deletedPhieuKhamBenh) {
+            if (result) {
                 res.status(200).json({
                     success: true,
-                    message: 'Deleted invoice successfully.',
-                    data: deletedPhieuKhamBenh
+                    message: 'Invoice deleted successfully.'
                 });
             } else {
                 res.status(404).json({

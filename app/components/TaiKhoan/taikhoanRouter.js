@@ -5,13 +5,13 @@ const router = express.Router();
 router.get('/', taikhoanController.getTaiKhoans);
 router.get('/:id', taikhoanController.getTaiKhoanById);
 
-router.post('/new', (req, res, next)=>{
+router.post('/add', (req, res, next)=>{
     console.log("router log:", req.body);
     next();
 })
-router.post('/new', taikhoanController.createTaiKhoan);
+router.post('/add', taikhoanController.createTaiKhoan);
 
-router.put('/:id', taikhoanController.updateTaiKhoan);
-router.delete('/:id', taikhoanController.deleteTaiKhoan);
+router.put('/update/:id', taikhoanController.updateTaiKhoan);
+router.delete('/delete/:id', taikhoanController.deleteTaiKhoan);
 
 module.exports = router;
