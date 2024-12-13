@@ -7,16 +7,16 @@ router.get('/', phieukhambenhController.getPhieuKhamBenhs);
 router.get('/:id', phieukhambenhController.getPhieuKhamBenhById);
 
 // POST METHOD
-router.post('/new', (req, res, next) => {
+router.post('/add', (req, res, next) => {
     console.log('Router log:', req.body);
     next();
   });
-router.post('/new', phieukhambenhController.createPhieuKhamBenh);
+router.post('/add', phieukhambenhController.createPhieuKhamBenh);
 
 // PUT METHOD
-router.put('/:id', phieukhambenhController.updatePhieuKhamBenhById);
+router.put('/update/:id', phieukhambenhController.updatePhieuKhamBenh);
 
 // DELETE METHOD
-router.delete('/:id', phieukhambenhController.deletePhieuKhamBenhById);
+router.delete('/delete/:id', phieukhambenhController.deletePhieuKhamBenh);
 
 module.exports = router;

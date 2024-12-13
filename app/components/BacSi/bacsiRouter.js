@@ -7,9 +7,13 @@ router.post('/login', bacsiController.login);
 router.get('/', bacsiController.getBacSis);
 router.get('/:id', bacsiController.getBacSiById);
 
-router.post('/new', bacsiController.createBacSi);
+router.get('/add', (req, res, next) => {
+    console.log('Router log:', req.body);
+    next();
+  });
+router.post('/add', bacsiController.createBacSi);
 
-router.put('/:id', bacsiController.updateBacSi);
-router.delete('/:id', bacsiController.deleteBacSi);
+router.put('/update/:id', bacsiController.updateBacSi);
+router.delete('/delete/:id', bacsiController.deleteBacSi);
 
 module.exports = router;
