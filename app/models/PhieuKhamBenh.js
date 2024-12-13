@@ -1,3 +1,5 @@
+const { on } = require("nodemon");
+
 module.exports = (sequelize, DataTypes) => {
   const phieukhambenh = sequelize.define('phieukhambenh', {
     maphieukham: {
@@ -102,23 +104,27 @@ module.exports = (sequelize, DataTypes) => {
   phieukhambenh.associate = function(models) {
     phieukhambenh.belongsTo(models.benhnhan, {
       foreignKey: 'mabenhnhan',
-      targetKey: 'mabenhnhan'
+      targetKey: 'mabenhnhan',
     });
     phieukhambenh.belongsTo(models.bacsi, {
       foreignKey: 'mabacsi',
-      targetKey: 'mabacsi'
+      targetKey: 'mabacsi',
     });
     phieukhambenh.hasMany(models.toathuoc, {
-      foreignKey: 'maphieukham'
+      foreignKey: 'maphieukham',
+      onDelete: 'CASCADE',
     });
     phieukhambenh.hasMany(models.canlamsang, {
-      foreignKey: 'maphieukham'
+      foreignKey: 'maphieukham',
+      onDelete: 'CASCADE',
     });
     phieukhambenh.hasMany(models.loaibenhtrongphieukham, {
-      foreignKey: 'maphieukham'
+      foreignKey: 'maphieukham',
+      onDelete: 'CASCADE',
     });
     phieukhambenh.hasOne(models.hoadon, {
-      foreignKey: 'maphieukham'
+      foreignKey: 'maphieukham',
+      onDelete: 'CASCADE',
     });
   };
 
