@@ -75,7 +75,8 @@
 //     return false;
 // };
 
-const { benhnhan } = require('../../models/model.index');
+const { benhnhan,phieukhambenh,toathuoc,thuoc,cachdungthuoc,cachdung } = require('../../models/model.index');
+const { sequelize } = require('../../models/model.index');
 
 // Hàm đổi tên key trong object
 const renameKeys = (obj, keyMap) => {
@@ -122,6 +123,85 @@ exports.getBenhNhans = async () => {
     return benhnhans.map((bn) => renameKeys(bn.toJSON(), keyMapViToEng));
 };
 
+//Lấy tất cả bệnh nhân kèm phiếu khám bệnh theo ngày
+exports.getBenhNhanKhamBenh = async () => {
+    const benhnhans = await benhnhan.findAll({
+        include: [
+            {
+                model: phieukhambenh,
+                as: 'phieukhambenhs',
+            }
+        ]
+    });
+    return benhnhans.map((bn) => renameKeys(bn.toJSON(), keyMapViToEng));
+};
+
+// Lấy bệnh nhân theo id kèm phiếu khám bệnh, toa thuốc, thông tin thuốc và cách dùng
+exports.getBenhNhanKhamBenhById = async (id) => {
+    try {
+        const query = `
+            SELECT 
+                bn.mabenhnhan,
+                bn.hoten,
+                bn.gioitinh,
+                bn.ngaysinh,
+                bn.diachi,
+                bn.sodienthoai,
+                bn.nghenghiep,
+                bn.dantoc,
+                bn.tiensu,
+                bn.diung,
+                bn.ghichu,
+                pkb.maphieukham,
+                pkb.ngaykham,
+                pkb.trieuchung,
+                pkb.mach,
+                pkb.nhietdo,
+                pkb.huyetap,
+                pkb.nhiptho,
+                pkb.chieucao,
+                pkb.cannang,
+                pkb.lydokham,
+                pkb.ghichukham,
+                pkb.loidan,
+                pkb.ngaytaikham,
+                tt.mathuoc,
+                tt.soluong,
+                t.tenthuoc,
+                dv.tendonvi,
+                cd.motacachdung
+            FROM 
+                benhnhan bn
+             JOIN 
+                phieukhambenh pkb ON bn.mabenhnhan = pkb.mabenhnhan
+             JOIN 
+                toathuoc tt ON pkb.maphieukham = tt.maphieukham
+             JOIN 
+                thuoc t ON tt.mathuoc = t.mathuoc
+             JOIN 
+                cachdungthuoc cdt ON tt.mathuoc = cdt.mathuoc
+             JOIN 
+                cachdung cd ON cdt.macachdung = cd.macachdung
+             JOIN
+                donvitinh dv ON dv.madonvi = t.madonvi
+            WHERE 
+                bn.mabenhnhan = :id;
+        `;
+
+        // Thực thi câu lệnh SQL
+        const [results] = await sequelize.query(query, {
+            replacements: { id }, // Truyền tham số vào câu lệnh
+            type: sequelize.QueryTypes.SELECT,
+        });
+
+        return results; // Trả về kết quả
+    } catch (error) {
+        console.error('Error fetching patient data:', error);
+        throw error;
+    }
+};
+
+
 // Lấy bệnh nhân theo id
 exports.getBenhNhanById = async (id) => {
     const bn = await benhnhan.findByPk(id);
@@ -149,13 +229,42 @@ exports.updateBenhNhan = async (id, data) => {
     return null;
 };
 
+
 // Xóa bệnh nhân
 exports.deleteBenhNhan = async (id) => {
-    const bn = await benhnhan.findByPk(id);
-    if (bn) {
-        await bn.destroy();
-        return true;
+    try {
+        // Tìm bệnh nhân theo ID
+        const bn = await benhnhan.findByPk(id);
+
+        if (bn) {
+            // Xóa các phiếu khám bệnh liên quan trước
+            await phieukhambenh.destroy({
+                where: { mabenhnhan: id },
+            });
+
+            await bn.destroy();
+
+            return true; 
+        }
+
+        return false; // Bệnh nhân không tồn tại
+    } catch (error) {
+        console.error('Error deleting benhnhan:', error);
+        throw error; // Ném lỗi để xử lý nếu cần
     }
-    return false;
+};
+
+exports.updatePatient = async (id,data) => {
+    try {
+        const bn = await benhnhan.findByPk(id);
+        if (bn) {
+            await bn.update(data);
+            return renameKeys(bn.toJSON(), keyMapViToEng);
+        }
+        return null;
+    } catch (error) {
+        console.error('Error updating benhnhan:', error);
+        throw error;
+    }
 };
 

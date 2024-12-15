@@ -14,5 +14,12 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false
   });
 
+  cachdung.associate = function(models) {
+    cachdung.hasMany(models.cachdungthuoc, {
+      foreignKey: 'macachdung',
+      as: 'cachdungthuocs'
+    });
+  };
+
   return cachdung;
 };

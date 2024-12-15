@@ -1,8 +1,25 @@
-const {thuoc} = require('../../models/model.index');
+const {thuoc,donvitinh,cachdungthuoc, cachdung} = require('../../models/model.index');
 
 module.exports = {
     getThuocs: async () => {
-        return await thuoc.findAll();
+        return await thuoc.findAll({
+            include: [
+                {
+                    model: donvitinh,
+                    as: 'donvitinh'
+                },
+                {
+                    model: cachdungthuoc,
+                    as: 'cachdungthuocs',
+                    include: [
+                        {
+                            model: cachdung,
+                            as: 'cachdung'
+                        }
+                    ]
+                }
+            ]
+        });
     },
     getThuocById: async (id) => {
         return await thuoc.findByPk(id);

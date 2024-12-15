@@ -7,10 +7,6 @@ router.get('/', phieukhambenhController.getPhieuKhamBenhs);
 router.get('/:id', phieukhambenhController.getPhieuKhamBenhById);
 
 // POST METHOD
-router.post('/add', (req, res, next) => {
-    console.log('Router log:', req.body);
-    next();
-  });
 router.post('/add', phieukhambenhController.createPhieuKhamBenh);
 
 // PUT METHOD

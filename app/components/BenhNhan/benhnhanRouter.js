@@ -4,14 +4,14 @@ const router = express.Router();
 
 // GET METHOD
 router.get('/', benhnhanController.getBenhNhans);
+router.get('/getkhambenh', benhnhanController.getBenhNhanKhamBenh);
+
 router.get('/:id', benhnhanController.getBenhNhanById);
 
+router.get('/getkhambenh/:id', benhnhanController.getBenhNhanKhamBenhById);
+
 // POST METHOD
-router.post('/new', (req, res, next) => {
-    console.log('Router log:', req.body);
-    next();
-  });
-router.post('/new', benhnhanController.createBenhNhan);
+router.post('/new', benhnhanController.createAndUpateBenhNhan);
 
 // PUT METHOD
 router.put('/update/:id', benhnhanController.updateBenhNhan);

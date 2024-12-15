@@ -1,6 +1,61 @@
 const benhnhanService = require('./benhnhanService');
+const phieukhambenhService = require('../PhieuKhamBenh/phieukhambenhService');
 
 module.exports = {
+    // GET /api/getkhambenh
+    getBenhNhanKhamBenh: async (req, res) => {
+        try {
+            const benhnhan = await benhnhanService.getBenhNhanKhamBenh();
+            res.status(200).json({
+                success: true,
+                message: 'Retrieved list of patients successfully.',
+                data: benhnhan
+            });
+        } catch (error) {
+            console.error('Error fetching patients:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to retrieve patients.',
+                error: error.message
+            });
+        }
+    },
+
+    // GET /api/getkhambenh/:id
+    getBenhNhanKhamBenhById: async (req, res) => {
+        try {
+            const { id } = req.params;
+
+            if (!id) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Patient ID is required.'
+                });
+            }
+
+            const benhnhan = await benhnhanService.getBenhNhanKhamBenhById(id);
+            if (benhnhan) {
+                res.status(200).json({
+                    success: true,
+                    data: benhnhan,
+                    message: 'Retrieved patient details successfully.'
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    message: `Patient with ID ${id} not found.`
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching patient details:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to retrieve patient details.',
+                error: error.message
+            });
+        }
+    },
+
     // GET /api/benh-nhan
     getBenhNhans: async (req, res) => {
         try {
@@ -62,7 +117,7 @@ module.exports = {
     },
 
     // POST /api/benh-nhan/new
-    createBenhNhan: async (req, res) => {
+    createAndUpateBenhNhan: async (req, res) => {
         try {
             const { body } = req;
 
@@ -73,10 +128,33 @@ module.exports = {
                 });
             }
 
-            const benhnhan = await benhnhanService.createBenhNhan(body);
+            benhnhan = await benhnhanService.getBenhNhanById(body.id);
+
+            if (benhnhan) {
+                // Nếu tồn tại, cập nhật thông tin bệnh nhân
+                benhnhan = await benhnhanService.updateBenhNhan(body.id, body);
+                return res.status(200).json({
+                    success: true,
+                    data: benhnhan,
+                    message: 'Updated patient successfully.'
+                });
+            }
+
+
+            benhnhan = await benhnhanService.createBenhNhan(body);
+            const date = new Date().toISOString().split("T")[0];
+
+            //Create a new phieukhambenh 
+            const phieukhambenh = await phieukhambenhService.createPhieuKhamBenh({
+                mabenhnhan: body.id,
+                ngaykham: date,
+                trangthai: 'Chưa khám',
+                mabacsi: 1
+            });
+
             res.status(201).json({
                 success: true,
-                data: benhnhan,
+                data: benhnhan, phieukhambenh,
                 message: 'Created patient successfully.'
             });
         } catch (error) {

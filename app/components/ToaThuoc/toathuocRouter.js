@@ -5,10 +5,6 @@ const router = express.Router();
 router.get('/', toathuocController.getToaThuocs);
 router.get('/:id', toathuocController.getToaThuocById);
 
-router.post('/add', (req, res, next) => {
-    console.log('Router log:', req.body);
-    next();
-});
 router.post('/add', toathuocController.createToaThuoc);
 
 router.put('/update/:id', toathuocController.updateToaThuoc);

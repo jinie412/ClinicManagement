@@ -1,4 +1,6 @@
 const phieukhambenhService = require('./phieukhambenhService');
+const toaThuocService = require('../ToaThuoc/toathuocService');
+const benhnhanService = require('../BenhNhan/benhnhanService');
 
 module.exports = {
     // GET /api/phieukhambenh
@@ -59,10 +61,10 @@ module.exports = {
             });
         }
     },
-    // POST /api/phieukhambenh/new
+    // POST /api/phieukhambenh/add
     createPhieuKhamBenh: async (req, res) => {
         try {
-            const { data } = req.body;
+            const data = req.body;
 
             if (!data) {
                 return res.status(400).json({
@@ -71,7 +73,34 @@ module.exports = {
                 });
             }
 
+            // Fetch benhnhan details
+            const benhnhan = await benhnhanService.getBenhNhanById(data.mabenhnhan);
+            if (!benhnhan) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Patient not found.'
+                });
+            }
+
+            // Update benhnhan with tiensu and diung
+            await benhnhanService.updatePatient(data.mabenhnhan, {
+                tiensu: data.tiensu,
+                diung: data.diung
+            });
+
+            data.mabacsi = 1;
             const newPhieuKhamBenh = await phieukhambenhService.createPhieuKhamBenh(data);
+
+            // Create toathuoc records if thuoc data is provided
+            if (data.thuoc && Array.isArray(data.thuoc)) {
+                for (const thuoc of data.thuoc) {
+                    await toaThuocService.createToaThuoc({
+                        maphieukham: newPhieuKhamBenh.maphieukham,
+                        mathuoc: thuoc.mathuoc,
+                        soluong: thuoc.soluong
+                    });
+                }
+            }
 
             res.status(201).json({
                 success: true,

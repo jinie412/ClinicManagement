@@ -1,5 +1,3 @@
-const { on } = require("nodemon");
-
 module.exports = (sequelize, DataTypes) => {
   const phieukhambenh = sequelize.define('phieukhambenh', {
     maphieukham: {
@@ -77,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(25),
       allowNull: false,
       validate: {
-        isIn: [['chưa khám', 'đang khám', 'đã khám']]
+        isIn: [['Chưa khám', 'Đang khám', 'Đã khám']]
       }
     },
     mabenhnhan: {
@@ -105,6 +103,8 @@ module.exports = (sequelize, DataTypes) => {
     phieukhambenh.belongsTo(models.benhnhan, {
       foreignKey: 'mabenhnhan',
       targetKey: 'mabenhnhan',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
     });
     phieukhambenh.belongsTo(models.bacsi, {
       foreignKey: 'mabacsi',
