@@ -3,7 +3,7 @@ const toaThuocService = require('../ToaThuoc/toathuocService');
 const benhnhanService = require('../BenhNhan/benhnhanService');
 
 module.exports = {
-    // GET /api/phieukhambenh
+    // GET /api/phieu-kham-benh
     getPhieuKhamBenhs: async (req, res ) =>{
         try {
             const phieukhambenhs = await phieukhambenhService.getPhieuKhamBenhs();
@@ -30,7 +30,7 @@ module.exports = {
     // GET /api/phieukhambenh/:id
     getPhieuKhamBenhById: async (req, res) => {
         try {
-            const { id } = req.params;
+            const id = req.params.id;
 
             if (!id) {
                 return res.status(400).json({
@@ -148,7 +148,7 @@ module.exports = {
     // DELETE /api/phieukhambenh/delete/:id
     deletePhieuKhamBenh: async (req, res) => {
         try {
-            const { id } = req.params;
+            const id = req.params.id;
 
             if (!id) {
                 return res.status(400).json({
@@ -163,7 +163,6 @@ module.exports = {
                 res.status(200).json({
                     success: true,
                     message: 'Deleted invoice successfully.',
-                    data: deletedPhieuKhamBenh
                 });
             } else {
                 res.status(404).json({

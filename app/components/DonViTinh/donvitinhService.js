@@ -11,18 +11,17 @@ module.exports = {
         return await donvitinh.create(data);
     },
     updateDonViTinh: async(id, data) =>{
-        const donvitinh = await donvitinh.findByPk(id);
-        if(donvitinh){
-            return await donvitinh.update(data);
+        const dvt = await donvitinh.findByPk(id);
+        if(dvt){
+            return await dvt.update(data);
         }
         return null;
     },
     deleteDonViTinh: async(id) =>{
-        const donvitinh = await donvitinh.findByPk(id);
-        if(donvitinh){
-            await donvitinh.destroy();
-            return true;
+        const dvt = await donvitinh.findByPk(id);
+        if(dvt){
+            return await dvt.destroy();
         }
-        return false;
+        return null;
     }
 }

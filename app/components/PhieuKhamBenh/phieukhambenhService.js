@@ -1,4 +1,5 @@
 const {phieukhambenh} = require('../../models/model.index');
+// const { get } = require('./phieukhambenhRouter');
 
 // Hàm đổi tên key trong object
 const renameKeys = (obj, keyMap) => {
@@ -59,18 +60,18 @@ module.exports = {
         return await phieukhambenh.create(data);
     },
     updatePhieuKhamBenh: async(id, data) =>{
-        const phieukhambenh = await phieukhambenh.findByPk(id);
-        if(phieukhambenh){
-            return await phieukhambenh.update(data);
+        const existingPhieuKhamBenh = await phieukhambenh.findByPk(id);
+        if(existingPhieuKhamBenh){
+            return await existingPhieuKhamBenh.update(data);
         }
         return null;
     },
     deletePhieuKhamBenh: async(id) =>{
-        const phieukhambenh = await phieukhambenh.findByPk(id);
-        if(phieukhambenh){
-            await phieukhambenh.destroy();
-            return true;
+        const phieukhambenhRecord = await phieukhambenh.findByPk(id);
+        if(phieukhambenhRecord){
+            const deletedPhieuKhamBenh = await phieukhambenhRecord.destroy();
+            return deletedPhieuKhamBenh;
         }
-        return false;
+        return null;
     }
 }

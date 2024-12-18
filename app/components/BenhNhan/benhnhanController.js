@@ -127,12 +127,12 @@ module.exports = {
                     message: 'Patient data is required to create a new record.'
                 });
             }
-
-            benhnhan = await benhnhanService.getBenhNhanById(body.id);
+        
+            benhnhan = await benhnhanService.getBenhNhanById(body.mabenhnhan);
 
             if (benhnhan) {
                 // Nếu tồn tại, cập nhật thông tin bệnh nhân
-                benhnhan = await benhnhanService.updateBenhNhan(body.id, body);
+                benhnhan = await benhnhanService.updateBenhNhan(body.mabenhnhan, body);
                 return res.status(200).json({
                     success: true,
                     data: benhnhan,
@@ -146,7 +146,7 @@ module.exports = {
 
             //Create a new phieukhambenh 
             const phieukhambenh = await phieukhambenhService.createPhieuKhamBenh({
-                mabenhnhan: body.id,
+                mabenhnhan: body.mabenhnhan,
                 ngaykham: date,
                 trangthai: 'Chưa khám',
                 mabacsi: 1

@@ -5,6 +5,12 @@ module.exports = {
     getDonViTinhs: async (req, res) => {
         try {
             const donvitinh = await donvitinhService.getDonViTinhs();
+            if (!donvitinh) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Failed to retrieve list of units.'
+                });
+            }
             res.status(200).json({
                 success: true,
                 message: 'Retrieved list of units successfully.',
@@ -56,10 +62,11 @@ module.exports = {
         }
     },
 
-    // POST /api/donvitinh/new
+    // POST /api/donvitinh/add
     createDonViTinh: async (req, res) => {
         try {
-            const { body } = req;
+            const body = req.body;
+            console.log("body", body);
 
             if (!body || Object.keys(body).length === 0) {
                 return res.status(400).json({
@@ -87,8 +94,8 @@ module.exports = {
     // PUT /api/donvitinh/:id
     updateDonViTinhById: async (req, res) => {
         try {
-            const { id } = req.params;
-            const { body } = req;
+            const id = req.params.id;
+            const body = req.body;
 
             if (!body || Object.keys(body).length === 0) {
                 return res.status(400).json({
@@ -124,7 +131,7 @@ module.exports = {
     // DELETE /api/donvitinh/:id
     deleteDonViTinh: async (req, res) => {
         try {
-            const { id } = req.params;
+            const id = req.params.id;
 
             if (!id) {
                 return res.status(400).json({

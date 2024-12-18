@@ -120,12 +120,13 @@ const keyMapEngToVi = {
 // Lấy tất cả bệnh nhân
 exports.getBenhNhans = async () => {
     const benhnhans = await benhnhan.findAll();
-    return benhnhans.map((bn) => renameKeys(bn.toJSON(), keyMapViToEng));
+    // return benhnhans.map((bn) => renameKeys(bn.toJSON(), keyMapViToEng));
+    return benhnhans;
 };
 
 //Lấy tất cả bệnh nhân kèm phiếu khám bệnh theo ngày
 exports.getBenhNhanKhamBenh = async () => {
-    const benhnhans = await benhnhan.findAll({
+    const chiTietKhamBenh = await benhnhan.findAll({
         include: [
             {
                 model: phieukhambenh,
@@ -133,7 +134,7 @@ exports.getBenhNhanKhamBenh = async () => {
             }
         ]
     });
-    return benhnhans.map((bn) => renameKeys(bn.toJSON(), keyMapViToEng));
+    return chiTietKhamBenh;
 };
 
 // Lấy bệnh nhân theo id kèm phiếu khám bệnh, toa thuốc, thông tin thuốc và cách dùng
@@ -141,32 +142,12 @@ exports.getBenhNhanKhamBenhById = async (id) => {
     try {
         const query = `
             SELECT 
-                bn.mabenhnhan,
-                bn.hoten,
-                bn.gioitinh,
-                bn.ngaysinh,
-                bn.diachi,
-                bn.sodienthoai,
-                bn.nghenghiep,
-                bn.dantoc,
-                bn.tiensu,
-                bn.diung,
-                bn.ghichu,
-                pkb.maphieukham,
-                pkb.ngaykham,
-                pkb.trieuchung,
-                pkb.mach,
-                pkb.nhietdo,
-                pkb.huyetap,
-                pkb.nhiptho,
-                pkb.chieucao,
-                pkb.cannang,
-                pkb.lydokham,
-                pkb.ghichukham,
-                pkb.loidan,
-                pkb.ngaytaikham,
-                tt.mathuoc,
-                tt.soluong,
+                bn.mabenhnhan, bn.hoten, bn.gioitinh, bn.ngaysinh, bn.diachi,
+                bn.sodienthoai, bn.nghenghiep, bn.dantoc, bn.tiensu, bn.diung,bn.ghichu, 
+                pkb.maphieukham, pkb.ngaykham, pkb.trieuchung, pkb.mach,
+                pkb.nhietdo, pkb.huyetap, pkb.nhiptho, pkb.chieucao, pkb.cannang,
+                pkb.lydokham, pkb.ghichukham, pkb.loidan, pkb.ngaytaikham,
+                tt.mathuoc,tt.soluong,
                 t.tenthuoc,
                 dv.tendonvi,
                 cd.motacachdung
@@ -174,22 +155,25 @@ exports.getBenhNhanKhamBenhById = async (id) => {
                 benhnhan bn
              JOIN 
                 phieukhambenh pkb ON bn.mabenhnhan = pkb.mabenhnhan
-             JOIN 
+             LEFT JOIN 
                 toathuoc tt ON pkb.maphieukham = tt.maphieukham
-             JOIN 
+             LEFT JOIN 
                 thuoc t ON tt.mathuoc = t.mathuoc
-             JOIN 
+             LEFT JOIN 
                 cachdungthuoc cdt ON tt.mathuoc = cdt.mathuoc
-             JOIN 
+             LEFT JOIN 
                 cachdung cd ON cdt.macachdung = cd.macachdung
-             JOIN
+             LEFT JOIN
                 donvitinh dv ON dv.madonvi = t.madonvi
             WHERE 
-                bn.mabenhnhan = :id;
+                bn.mabenhnhan = :id
+            ORDER BY 
+                pkb.ngaykham DESC;
+
         `;
 
         // Thực thi câu lệnh SQL
-        const [results] = await sequelize.query(query, {
+        const results = await sequelize.query(query, {
             replacements: { id }, // Truyền tham số vào câu lệnh
             type: sequelize.QueryTypes.SELECT,
         });
@@ -215,7 +199,8 @@ exports.getBenhNhanById = async (id) => {
 exports.createBenhNhan = async (data) => {
     const renamedData = renameKeys(data, keyMapEngToVi);
     const newBenhNhan = await benhnhan.create(renamedData);
-    return renameKeys(newBenhNhan.toJSON(), keyMapViToEng);
+    return newBenhNhan;
+    // return renameKeys(newBenhNhan.toJSON(), keyMapViToEng);
 };
 
 // Cập nhật thông tin bệnh nhân

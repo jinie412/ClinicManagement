@@ -1,4 +1,4 @@
-const donvitinhController = require('./donvitinhService');
+const donvitinhController = require('./donvitinhController');
 const express = require('express'); 
 const router = express.Router();
 
@@ -6,14 +6,10 @@ const router = express.Router();
 router.get('/', donvitinhController.getDonViTinhs);
 
 // POST METHOD
-router.post('/add', (req, res, next)=>{
-    console.log("router log:", req.body);
-    next();
-})
 router.post('/add', donvitinhController.createDonViTinh);
 
 // PUT METHOD
-router.put('/:id', donvitinhController.updateDonViTinh);
+router.put('/:id', donvitinhController.updateDonViTinhById);
 
 // DELETE METHOD
 router.delete('/:id', donvitinhController.deleteDonViTinh);

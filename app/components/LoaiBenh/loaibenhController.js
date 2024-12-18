@@ -22,7 +22,7 @@ module.exports = {
     // GET /api/loaibenh/:id
     getLoaiBenhById: async (req, res) => {
         try {
-            const { id } = req.params;
+            const id = req.params.id;
 
             if (!id) {
                 return res.status(400).json({
@@ -56,16 +56,16 @@ module.exports = {
     // POST /api/loaibenh/new
     createLoaiBenh: async (req, res) => {
         try {
-            const { tenloaibenh } = req.body;
+            const body = req.body;
 
-            if (!tenloaibenh) {
+            if (!body) {
                 return res.status(400).json({
                     success: false,
                     message: 'Disease name is required.'
                 });
             }
 
-            const newLoaiBenh = await loaibenhService.createLoaiBenh(tenloaibenh);
+            const newLoaiBenh = await loaibenhService.createLoaiBenh(body);
 
             res.status(201).json({
                 success: true,
@@ -84,8 +84,8 @@ module.exports = {
     // PUT /api/loaibenh/update/:id
     updateLoaiBenh: async (req, res) => {
         try {
-            const { id } = req.params;
-            const { tenloaibenh } = req.body;
+            const id = req.params.id;
+            const body = req.body;
 
             if (!id) {
                 return res.status(400).json({
@@ -94,14 +94,14 @@ module.exports = {
                 });
             }
 
-            if (!tenloaibenh) {
+            if (!body) {
                 return res.status(400).json({
                     success: false,
                     message: 'Disease name is required.'
                 });
             }
 
-            const updatedLoaiBenh = await loaibenhService.updateLoaiBenh(id, tenloaibenh);
+            const updatedLoaiBenh = await loaibenhService.updateLoaiBenh(id, body);
 
             if (updatedLoaiBenh) {
                 res.status(200).json({

@@ -11,16 +11,16 @@ module.exports = {
         return await loaibenh.create(data);
     },
     updateLoaiBenh: async (id, data) => {
-        const loaibenh = await loaibenh.findByPk(id);
-        if (loaibenh) {
-            return await loaibenh.update(data);
+        const existingLoaiBenh = await loaibenh.findByPk(id);
+        if (existingLoaiBenh) {
+            return await existingLoaiBenh.update(data);
         }
         return null;
     },
     deleteLoaiBenh: async (id) => {
-        const loaibenh = await loaibenh.findByPk(id);
-        if (loaibenh) {
-            await loaibenh.destroy();
+        const loaibenhRecord = await loaibenh.findByPk(id);
+        if (loaibenhRecord) {
+            await loaibenhRecord.destroy();
             return true;
         }
         return false;
