@@ -11,16 +11,16 @@ module.exports = {
         return await cachdung.create(data);
     },
     updateCachDung: async (id, data) => {
-        const cachdung = await cachdung.findByPk(id);
-        if (cachdung) {
-            return await cachdung.update(data);
+        const existingCachDung = await cachdung.findByPk(id);
+        if (existingCachDung) {
+            return await existingCachDung.update(data);
         }
         return null;
     },
     deleteCachDung: async (id) => {
-        const cachdung = await cachdung.findByPk(id);
-        if (cachdung) {
-            await cachdung.destroy();
+        const cachdungRecord = await cachdung.findByPk(id);
+        if (cachdungRecord) {
+            await cachdungRecord.destroy();
             return true;
         }
         return false;

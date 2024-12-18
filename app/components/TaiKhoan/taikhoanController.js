@@ -1,10 +1,11 @@
 const taikhoanService = require('./taikhoanService');
 
 module.exports = {
-    // GET /api/taikhoan
-    getTaiKhoans: (req, res) => {
+    // GET /api/tai-khoan
+    getTaiKhoans: async (req, res) => {
         try{
-            const taikhoans = taikhoanService.getTaiKhoans();
+            const taikhoans = await taikhoanService.getTaiKhoans();
+            console.log("taikhoanController log:", taikhoans);
             if(!taikhoans){
                 return res.status(404).json({
                     success: false,
@@ -26,10 +27,10 @@ module.exports = {
         }
     },
 
-    // GET /api/taikhoan/:id
-    getTaiKhoanById: (req, res) => {
+    // GET /api/tai-khoan/:id
+    getTaiKhoanById: async (req, res) => {
         try{
-            const { id } = req.params;
+            const id = req.params.id;
 
             if(!id){
                 return res.status(400).json({
@@ -38,12 +39,13 @@ module.exports = {
                 });
             }
 
-            const taikhoan = taikhoanService.getTaiKhoanById(id);
+            const taikhoan = await taikhoanService.getTaiKhoanById(id);
 
             if(taikhoan){
                 res.status(200).json({
                     success: true,
-                    data: taikhoan
+                    data: taikhoan,
+                    message: 'Account retrieved successfully.'
                 });
             }else{
                 res.status(404).json({
@@ -61,11 +63,13 @@ module.exports = {
         }
     },
 
-    // POST /api/taikhoan/add
-    createTaiKhoan: (req, res) => {
+    // POST /api/tai-khoan/add
+    createTaiKhoan: async(req, res) => {
         try{
-            const { taikhoan } = req.body;
+            const taikhoan = req.body;
 
+            console.log("taikhoanController log:", req.body);
+            console.log("taikhoanController log:", taikhoan);
             if(!taikhoan){
                 return res.status(400).json({
                     success: false,
@@ -73,13 +77,13 @@ module.exports = {
                 });
             }
 
-            const newTaiKhoan = taikhoanService.createTaiKhoan(taikhoan);
+            const newTaiKhoan = await taikhoanService.createTaiKhoan(taikhoan);
 
             res.status(201).json({
                 success: true,
                 message: 'Account created successfully.',
-                data: newTaiKhoan
             });
+
         }catch(error){
             console.error('Error creating account:', error);
             res.status(500).json({
@@ -90,11 +94,11 @@ module.exports = {
         }
     },
 
-    // PUT /api/taikhoan/update/:id
-    updateTaiKhoan: (req, res) => {
+    // PUT /api/tai-khoan/update/:id
+    updateTaiKhoan: async (req, res) => {
         try{
-            const { id } = req.params;
-            const { taikhoan } = req.body;
+            const id = req.params.id;
+            const taikhoan = req.body;
 
             if(!id){
                 return res.status(400).json({
@@ -103,20 +107,21 @@ module.exports = {
                 });
             }
 
-            if(!taikhoan){
+            if (!taikhoan || Object.keys(taikhoan).length === 0) {
                 return res.status(400).json({
                     success: false,
-                    message: 'Account is required to update.'
+                    message: 'Account data is required to update.',
                 });
             }
 
-            const updatedTaiKhoan = taikhoanService.updateTaiKhoan(id, taikhoan);
+            const updatedTaiKhoan = await taikhoanService.updateTaiKhoan(id, taikhoan);
 
             res.status(200).json({
                 success: true,
                 message: 'Account updated successfully.',
                 data: updatedTaiKhoan
             });
+
         }catch(error){
             console.error('Error updating account:', error);
             res.status(500).json({
@@ -128,32 +133,34 @@ module.exports = {
     },
 
     // DELETE /api/taikhoan/delete/:id
-    deleteTaiKhoan: (req, res) => {
-        try{
-            const { id } = req.params;
-
-            if(!id){
+    deleteTaiKhoan : async(req, res) => {
+        try {
+            const id = req.params.id;
+    
+            console.log("taikhoanController log:", id);
+    
+            if (!id) {
                 return res.status(400).json({
                     success: false,
                     message: 'ID is required to delete the account.'
                 });
             }
-
-            const deletedTaiKhoan = taikhoanService.deleteTaiKhoan(id);
-
-            if(deletedTaiKhoan){
+    
+            const deletedTaiKhoan = await taikhoanService.deleteTaiKhoan(id);
+    
+            if (deletedTaiKhoan) {
                 res.status(200).json({
                     success: true,
                     message: 'Account deleted successfully.',
                     data: deletedTaiKhoan
                 });
-            }else{
+            } else {
                 res.status(404).json({
                     success: false,
                     message: `Account with ID ${id} not found.`
                 });
             }
-        }catch(error){
+        } catch (error) {
             console.error('Error deleting account:', error);
             res.status(500).json({
                 success: false,

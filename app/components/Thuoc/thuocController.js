@@ -64,7 +64,7 @@ module.exports = {
     // POST /api/thuoc/add
     createThuoc: async (req, res) => {
         try {
-            const {thuoc} = req.body;
+            const thuoc = req.body;
 
             if (!thuoc) {
                 return res.status(400).json({
@@ -93,8 +93,8 @@ module.exports = {
     // PUT /api/thuoc/update/:id
     updateThuoc: async (req, res) => {
         try {
-            const {id} = req.params;
-            const {thuoc} = req.body;
+            const id = req.params.id;
+            const thuoc = req.body;
 
             if (!id) {
                 return res.status(400).json({
@@ -137,7 +137,7 @@ module.exports = {
     // DELETE /api/thuoc/delete/:id
     deleteThuoc: async (req, res) => {
         try {
-            const {id} = req.params;
+            const id = req.params.id;
 
             if (!id) {
                 return res.status(400).json({

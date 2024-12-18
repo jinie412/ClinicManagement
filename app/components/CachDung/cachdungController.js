@@ -31,7 +31,7 @@ module.exports = {
     // POST /api/cach-dung/new
     createCachDung: async (req, res) => {
         try {
-            const { body } = req;
+            const body = req.body;
 
             if (!body || Object.keys(body).length === 0) {
                 return res.status(400).json({
@@ -59,8 +59,8 @@ module.exports = {
     // PUT /api/cach-dung/update/:id
     updateCachDung: async (req, res) => {
         try {
-            const { id } = req.params;
-            const { body } = req;
+            const id = req.params.id;
+            const body = req.body;
 
             if (!id) {
                 return res.status(400).json({
@@ -103,7 +103,7 @@ module.exports = {
     // DELETE /api/cach-dung/delete/:id
     deleteCachDung: async (req, res) => {
         try {
-            const { id } = req.params;
+            const id = req.params.id;
 
             if (!id) {
                 return res.status(400).json({

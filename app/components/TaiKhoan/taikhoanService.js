@@ -11,18 +11,23 @@ module.exports = {
         return await taikhoan.create(data);
     },
     updateTaiKhoan: async(id, data) =>{
-        const taikhoan = await taikhoan.findByPk(id);
-        if(taikhoan){
-            return await taikhoan.update(data);
+        
+        // const existingTaiKhoan = await taikhoan.findOne({where: {tentaikhoan: id}});
+        const existingTaiKhoan = await taikhoan.findByPk(id);
+        if(existingTaiKhoan){
+            const updatedTaiKhoan = await existingTaiKhoan.update(data);
+            return updatedTaiKhoan;
         }
         return null;
+        
     },
-    deleteTaiKhoan: async(id) =>{
-        const taikhoan = await taikhoan.findByPk(id);
-        if(taikhoan){
-            await taikhoan.destroy();
-            return true;
+    deleteTaiKhoan: async(id) => {
+        const taikhoanRecord = await taikhoan.findByPk(id);
+    
+        if (taikhoanRecord) {
+            const deletedTaiKhoan = await taikhoanRecord.destroy();
+            return deletedTaiKhoan;
         }
-        return false;
+        return null;
     }
 }

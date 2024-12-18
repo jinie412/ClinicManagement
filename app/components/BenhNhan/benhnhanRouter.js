@@ -11,7 +11,7 @@ router.get('/:id', benhnhanController.getBenhNhanById);
 router.get('/getkhambenh/:id', benhnhanController.getBenhNhanKhamBenhById);
 
 // POST METHOD
-router.post('/new', benhnhanController.createAndUpateBenhNhan);
+router.post('/add', benhnhanController.createAndUpateBenhNhan);
 
 // PUT METHOD
 router.put('/update/:id', benhnhanController.updateBenhNhan);
