@@ -28,7 +28,7 @@ module.exports = {
     // GET /api/loaibenhtrongphieukham/:id
     getLoaiBenhTrongPhieuKhamById: async (req, res) => {
         try {
-            const { id } = req.params;
+            const id = req.params.id;
 
             if (!id) {
                 return res.status(400).json({
@@ -62,16 +62,16 @@ module.exports = {
     // POST /api/loaibenhtrongphieukham/new
     createLoaiBenhTrongPhieuKham: async (req, res) => {
         try {
-            const { idphieukham, idloaibenh } = req.body;
+            const data = req.body;
 
-            if (!idphieukham || !idloaibenh) {
+            if (!data) {
                 return res.status(400).json({
                     success: false,
-                    message: 'ID of examination and disease are required to create a disease in examination.'
+                    message: 'Data is required to create the disease in examination.'
                 });
             }
 
-            const loaibenhtrongphieukham = await loaibenhtrongphieukhamService.createLoaiBenhTrongPhieuKham(idphieukham, idloaibenh);
+            const loaibenhtrongphieukham = await loaibenhtrongphieukhamService.createLoaiBenhTrongPhieuKham(data);
 
             res.status(201).json({
                 success: true,
@@ -87,11 +87,14 @@ module.exports = {
             });
         }
     },
-    // PUT /api/loaibenhtrongphieukham/update/:id
+    // PUT /api/loaibenhtrongphieukham/update/:maphieukham/:maloaibenh
     updateLoaiBenhTrongPhieuKham: async (req, res) => {
         try {
-            const { id } = req.params;
-            const { idphieukham, idloaibenh } = req.body;
+            const data = req.body;
+            const maphieukham = req.params.maphieukham;
+            const maloaibenh = req.params.maloaibenh;
+            const id = {maphieukham, maloaibenh};
+            console.log('id', id);
 
             if (!id) {
                 return res.status(400).json({
@@ -100,8 +103,8 @@ module.exports = {
                 });
             }
 
-            const loaibenhtrongphieukham = await loaibenhtrongphieukhamService.updateLoaiBenhTrongPhieuKham(id, idphieukham, idloaibenh);
-
+            const loaibenhtrongphieukham = await loaibenhtrongphieukhamService.updateLoaiBenhTrongPhieuKham(id, data);
+ 
             if (loaibenhtrongphieukham) {
                 res.status(200).json({
                     success: true,
@@ -123,10 +126,10 @@ module.exports = {
             });
         }
     },
-    // DELETE /api/loaibenhtrongphieukham/delete/:id
+    // DELETE /api/loaibenhtrongphieukham/delete/:maphieukham/:maloaibenh
     deleteLoaiBenhTrongPhieuKham: async (req, res) => {
         try {
-            const { id } = req.params;
+            const id = req.params;
 
             if (!id) {
                 return res.status(400).json({

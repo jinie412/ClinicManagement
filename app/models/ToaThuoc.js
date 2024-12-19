@@ -1,3 +1,5 @@
+const { on } = require("nodemon");
+
 module.exports = (sequelize, DataTypes) => {
   const toathuoc = sequelize.define('toathuoc', {
     maphieukham: {
@@ -28,11 +30,13 @@ module.exports = (sequelize, DataTypes) => {
   toathuoc.associate = function(models) {
     toathuoc.belongsTo(models.phieukhambenh, {
       foreignKey: 'maphieukham',
-      targetKey: 'maphieukham'
+      targetKey: 'maphieukham',
+      onDelte: 'CASCADE'
     });
     toathuoc.belongsTo(models.thuoc, {
       foreignKey: 'mathuoc',
-      targetKey: 'mathuoc'
+      targetKey: 'mathuoc',
+      onDelete: 'CASCADE',
     });
   };
 

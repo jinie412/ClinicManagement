@@ -1,5 +1,4 @@
-const {toathuoc} = require('../../models/model.index');
-
+const {toathuoc, sequelize} = require('../../models/model.index');
 
 module.exports = {
     getToaThuocs: async () => {
@@ -9,21 +8,44 @@ module.exports = {
         return await toathuoc.findByPk(id);
     },
     createToaThuoc: async (data) => {
-        return await toathuoc.create(data);
+        return await toathuoc.bulkCreate(data);
     },
     updateToaThuoc: async (id, data) => {
-        const toathuoc = await toathuoc.findByPk(id);
-        if (toathuoc) {
-            return await toathuoc.update(data);
+        const t = await sequelize.transaction();
+        try {
+            const updatedToaThuoc = await toathuoc.update(
+                data, 
+                {where: {maphieukham: id.maphieukham, mathuoc: id.mathuoc}},
+                {transaction: t}
+            );
+
+            if (updatedToaThuoc) {
+                await t.commit();
+                return updatedToaThuoc;
+            }
+            await t.rollback();
+            return null;
+        } catch (error) {
+            await t.rollback();
+            throw error;
         }
-        return null;
     },
     deleteToaThuoc: async (id) => {
-        const toathuoc = await toathuoc.findByPk(id);
-        if (toathuoc) {
-            await toathuoc.destroy();
-            return true;
+        const t = await sequelize.transaction();
+        try{
+            const toathuocRecord = await toathuoc.destroy(
+                {where: {maphieukham : id.maphieukham, mathuoc: id.mathuoc}},
+                {transaction: t}
+            );
+            if(toathuocRecord){
+                await t.commit();
+                return toathuocRecord;
+            }
+            await t.rollback();
+            return null;
+        }catch(error){
+            await t.rollback();
+            throw error;
         }
-        return false;
     }
 }

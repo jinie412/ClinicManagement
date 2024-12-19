@@ -64,7 +64,7 @@ module.exports = {
     // POST /api/toathuoc/add
     createToaThuoc: async (req, res) => {
         try {
-            const {toathuoc} = req.body;
+            const toathuoc = req.body;
             if (!toathuoc) {
                 return res.status(400).json({
                     success: false,
@@ -99,8 +99,8 @@ module.exports = {
     // PUT /api/toathuoc/update/:id
     updateToaThuoc: async (req, res) => {
         try {
-            const {id} = req.params;
-            const {toathuoc} = req.body;
+            const id = req.params;
+            const toathuoc = req.body;
 
             if (!id) {
                 return res.status(400).json({
@@ -121,7 +121,6 @@ module.exports = {
             if (updatedToaThuoc) {
                 res.status(200).json({
                     success: true,
-                    data: updatedToaThuoc,
                     message: 'Prescription updated successfully !'
                 });
             } else {
@@ -140,10 +139,10 @@ module.exports = {
         }
     },
 
-    // DELETE /api/toathuoc/delete/:id
+    // DELETE /api/toathuoc/delete/:maphieukham/:mathuoc
     deleteToaThuoc: async (req, res) => {
         try {
-            const {id} = req.params;
+            const id = req.params;
 
             if (!id) {
                 return res.status(400).json({
