@@ -24,11 +24,13 @@ module.exports = (sequelize, DataTypes) => {
   loaibenhtrongphieukham.associate = function(models) {
     loaibenhtrongphieukham.belongsTo(models.phieukhambenh, {
       foreignKey: 'maphieukham',
-      targetKey: 'maphieukham'
+      targetKey: 'maphieukham',
+      onDelete: 'CASCADE'
     });
     loaibenhtrongphieukham.belongsTo(models.loaibenh, {
       foreignKey: 'maloaibenh',
-      targetKey: 'maloaibenh'
+      targetKey: 'maloaibenh',
+      onDelete: 'CASCADE',
     });
   };
 

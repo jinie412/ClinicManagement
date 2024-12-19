@@ -25,19 +25,19 @@ module.exports = {
         return await thuoc.findByPk(id);
     },
     createThuoc: async (data) => {
-        return await thuoc.create(data);
+        return await thuoc.bulkCreate(data);
     },
     updateThuoc: async (id, data) => {
-        const thuoc = await thuoc.findByPk(id);
-        if (thuoc) {
-            return await thuoc.update(data);
+        const existingThuoc = await thuoc.findByPk(id);
+        if (existingThuoc) {
+            return await existingThuoc.update(data);
         }
         return null;
     },
     deleteThuoc: async (id) => {
-        const thuoc = await thuoc.findByPk(id);
-        if (thuoc) {
-            await thuoc.destroy();
+        const thuocRecord = await thuoc.findByPk(id);
+        if (thuocRecord) {
+            await thuocRecord.destroy();
             return true;
         }
         return false;

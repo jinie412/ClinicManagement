@@ -1,28 +1,63 @@
-const {loadbenhtrongphieukham} = require('../../models/model.index');
+// const e = require('express');
+const {loaibenhtrongphieukham, sequelize} = require('../../models/model.index');
 
 module.exports = {
     getLoaiBenhTrongPhieuKhams: async() =>{
-        return await loadbenhtrongphieukham.findAll();
+        return await loaibenhtrongphieukham.findAll();
     },
     getLoaiBenhTrongPhieuKhamById: async(id) =>{
-        return await loadbenhtrongphieukham.findByPk(id);
+        return await loaibenhtrongphieukham.findByPk(id);
     },
-    createLoaiBenhTrongPhieuKham: async(data) =>{
-        return await loadbenhtrongphieukham.create(data);
+    createLoaiBenhTrongPhieuKham: async (data) => {
+        const t = await sequelize.transaction();
+        try {
+            const newRecord = await loaibenhtrongphieukham.create(data, { transaction: t });
+            if (newRecord) {
+                await t.commit();
+                return newRecord;
+            }
+            await t.rollback();
+            return null;
+        } catch (error) {
+            await t.rollback();
+            throw error;
+        }
     },
     updateLoaiBenhTrongPhieuKham: async(id, data) =>{
-        const loadbenhtrongphieukham = await loadbenhtrongphieukham.findByPk(id);
-        if(loadbenhtrongphieukham){
-            return await loadbenhtrongphieukham.update(data);
+        const t = await sequelize.transaction();
+        try{
+            const updatedRecord = await loaibenhtrongphieukham.update(
+                data, 
+                {where: {maphieukham: id.maphieukham, maloaibenh: id.maloaibenh}}, 
+                {transaction: t}
+            );
+            if(updatedRecord){
+                await t.commit();
+                return updatedRecord;
+            }
+            await t.rollback();
+            return null;
+        } catch(error){
+            await t.rollback();
+            throw error;
         }
-        return null;
     },
     deleteLoaiBenhTrongPhieuKham: async(id) =>{
-        const loadbenhtrongphieukham = await loadbenhtrongphieukham.findByPk(id);
-        if(loadbenhtrongphieukham){
-            await loadbenhtrongphieukham.destroy();
-            return true;
+        const t = await sequelize.transaction();
+        try{
+            const deletedRecord = await loaibenhtrongphieukham.destroy(
+                {where: {maphieukham: id.maphieukham, maloaibenh: id.maloaibenh}}, 
+                {transaction: t}
+            );
+            if(deletedRecord){
+                await t.commit();
+                return deletedRecord;
+            }
+            await t.rollback();
+            return null;
+        } catch(error){
+            await t.rollback();
+            throw error;
         }
-        return false;
     }
 }
