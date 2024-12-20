@@ -1,6 +1,61 @@
 const thuocService = require('./thuocService'); 
 
 module.exports = {
+    // GET /api/thuoc/getphieukhambenhs/:id
+    getThuocKhamBenhById: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const [month, year] = id.split('-');
+            if (!month || !year) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Month and year are required to fetch medication.'
+                });
+            }
+    
+            const thuoc = await thuocService.getThuocKhamBenhById(month, year);
+    
+            if (thuoc) {
+                res.status(200).json({
+                    success: true,
+                    data: thuoc,
+                    message: 'Get medication details successfully!'
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    message: `Medication with month ${month} and year ${year} not found.`
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching medication by month and year:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to retrieve medication.',
+                error: error.message
+            });
+        }
+    },
+
+    //Get /api/thuoc/getphieukhambenhs
+    getThuocPhieuKhamBenhs: async (req, res) => {
+        try {
+            const phieuKhamBenhs = await thuocService.getPhieuKhamBenhs();
+            res.status(200).json({
+                success: true,
+                data: phieuKhamBenhs,
+                message: 'Retrieved list of medical records successfully.'
+            });
+        } catch (error) {
+            console.error('Error fetching medical records:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to retrieve medical records.',
+                error: error.message
+            });
+        }
+    },
+
     // GET /api/thuoc
     getThuocs: async (req, res) => {
         try {
