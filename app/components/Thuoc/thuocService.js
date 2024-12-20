@@ -8,13 +8,13 @@ module.exports = {
             if (!month || isNaN(month) || month < 1 || month > 12 || !year || isNaN(year)) {
                 throw new Error('Tháng hoặc năm không hợp lệ.');
             }
-    
+
             const startDate = `${year}-${String(month).padStart(2, '0')}-01`;
             console.log('startDate:', startDate);
-    
+
             const endDate = `${year}-${String(month).padStart(2, '0')}-31`;
             console.log('endDate:', endDate);
-    
+
             // Câu lệnh SQL thuần
             const sql = `
             SELECT
@@ -36,7 +36,7 @@ module.exports = {
             GROUP BY
                 thuoc.tenthuoc, donvitinh.tendonvi
             `;
-    
+
             // Thực thi câu lệnh SQL với tham số
             const [results, metadata] = await sequelize.query(sql, {
                 replacements: {
@@ -45,14 +45,14 @@ module.exports = {
                 },
                 type: sequelize.QueryTypes.SELECT
             });
-    
+
             return results;
         } catch (error) {
             console.error('Lỗi khi lấy dữ liệu:', error);
             throw error;
         }
-    },   
-    
+    },
+
 
     getPhieuKhamBenhs: async () => {
         return await phieukhambenh.findAll({
@@ -81,46 +81,46 @@ module.exports = {
         });
     },
 
-        getThuocs: async () => {
-            return await thuoc.findAll({
-                include: [
-                    {
-                        model: donvitinh,
-                        as: 'donvitinh'
-                    },
-                    {
-                        model: cachdungthuoc,
-                        as: 'cachdungthuocs',
-                        include: [
-                            {
-                                model: cachdung,
-                                as: 'cachdung'
-                            }
-                        ]
-                    }
-                ]
-            });
-        },
-            getThuocById: async (id) => {
-                return await thuoc.findByPk(id);
-            },
-                createThuoc: async (data) => {
-                    return await thuoc.create(data);
+    getThuocs: async () => {
+        return await thuoc.findAll({
+            include: [
+                {
+                    model: donvitinh,
+                    as: 'donvitinh'
                 },
-                    updateThuoc: async (id, data) => {
-                        const thuoc = await thuoc.findByPk(id);
-                        if (thuoc) {
-                            return await thuoc.update(data);
+                {
+                    model: cachdungthuoc,
+                    as: 'cachdungthuocs',
+                    include: [
+                        {
+                            model: cachdung,
+                            as: 'cachdung'
                         }
-                        return null;
-                    },
-                        deleteThuoc: async (id) => {
-                            const thuoc = await thuoc.findByPk(id);
-                            if (thuoc) {
-                                await thuoc.destroy();
-                                return true;
-                            }
-                            return false;
-                        }
+                    ]
+                }
+            ]
+        });
+    },
+    getThuocById: async (id) => {
+        return await thuoc.findByPk(id);
+    },
+    createThuoc: async (data) => {
+        return await thuoc.create(data);
+    },
+    updateThuoc: async (id, data) => {
+        const thuoc = await thuoc.findByPk(id);
+        if (thuoc) {
+            return await thuoc.update(data);
+        }
+        return null;
+    },
+    deleteThuoc: async (id) => {
+        const thuoc = await thuoc.findByPk(id);
+        if (thuoc) {
+            await thuoc.destroy();
+            return true;
+        }
+        return false;
+    },
 }
 

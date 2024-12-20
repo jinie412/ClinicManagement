@@ -119,8 +119,8 @@ module.exports = {
     // PUT /api/phieukhambenh/update/:id
     updatePhieuKhamBenh: async (req, res) => {
         try {
-            const { id } = req.params;
-            const { data } = req.body;
+            const id = req.params.id;
+            const data = req.body;
 
             if (!id || !data) {
                 return res.status(400).json({

@@ -1,4 +1,5 @@
-const {phieukhambenh} = require('../../models/model.index');
+const {phieukhambenh, sequelize} = require('../../models/model.index');
+const cachdungthuocController = require('../CachDungThuoc/cachdungthuocController');
 // const { get } = require('./phieukhambenhRouter');
 
 // Hàm đổi tên key trong object
@@ -57,21 +58,46 @@ module.exports = {
         return await phieukhambenh.findByPk(id);
     },
     createPhieuKhamBenh: async(data) =>{
-        return await phieukhambenh.create(data);
+        const t = await sequelize.transaction();
+        try {
+            const newRecord = await phieukhambenh.create(data, { transaction: t });
+            await t.commit();
+            return newRecord;
+        } catch (error) {
+            await t.rollback();
+            throw error;
+        }
     },
     updatePhieuKhamBenh: async(id, data) =>{
-        const existingPhieuKhamBenh = await phieukhambenh.findByPk(id);
-        if(existingPhieuKhamBenh){
-            return await existingPhieuKhamBenh.update(data);
+        const t = await sequelize.transaction();
+        try {
+            const existingPhieuKhamBenh = await phieukhambenh.findByPk(id, { transaction: t });
+            if (existingPhieuKhamBenh){
+                const updatedPhieuKhamBenh = await existingPhieuKhamBenh.update(data, { transaction: t });
+                await t.commit();
+                return updatedPhieuKhamBenh;
+            }
+            await t.rollback();
+            return null;
+        } catch (error) {
+            await t.rollback();
+            throw error;
         }
-        return null;
     },
     deletePhieuKhamBenh: async(id) =>{
-        const phieukhambenhRecord = await phieukhambenh.findByPk(id);
-        if(phieukhambenhRecord){
-            const deletedPhieuKhamBenh = await phieukhambenhRecord.destroy();
-            return deletedPhieuKhamBenh;
+        const t = await sequelize.transaction();
+        try{
+            const phieukhambenhRecord = await phieukhambenh.findByPk(id, {transaction: t});
+            if(phieukhambenhRecord){
+                const deletedPhieuKhamBenh = await phieukhambenhRecord.destroy({transaction: t});
+                await t.commit();
+                return deletedPhieuKhamBenh;
+            }
+            await t.rollback();
+            return null;
+        } catch(error){
+            await t.rollback();
+            throw error;
         }
-        return null;
     }
 }

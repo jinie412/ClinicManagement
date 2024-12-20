@@ -14,9 +14,9 @@ router.post('/add', (req, res, next)=>{
 router.post('/add', loaibenhtrongphieukhamController.createLoaiBenhTrongPhieuKham);
 
 // PUT METHOD
-router.put('/update/:id', loaibenhtrongphieukhamController.updateLoaiBenhTrongPhieuKham);
+router.put('/update/:maphieukham/:maloaibenh', loaibenhtrongphieukhamController.updateLoaiBenhTrongPhieuKham);
 
 // DELETE METHOD
-router.delete('/delete/:id', loaibenhtrongphieukhamController.deleteLoaiBenhTrongPhieuKham);
+router.delete('/delete/:maphieukham/:maloaibenh', loaibenhtrongphieukhamController.deleteLoaiBenhTrongPhieuKham);
 
 module.exports = router;
