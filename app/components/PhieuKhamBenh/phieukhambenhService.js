@@ -51,6 +51,32 @@ const keyMapEngToVi = {
 };
 
 module.exports = {
+    getToaThuocByIdPhieuKham: async (id) => {
+        const query =`
+            SELECT
+                tt.mathuoc,tt.soluong,
+                t.tenthuoc,
+                dv.tendonvi,
+                cd.motacachdung
+            FROM
+                toathuoc tt
+            LEFT JOIN 
+                thuoc t ON tt.mathuoc = t.mathuoc
+            LEFT JOIN 
+                cachdungthuoc cdt ON tt.mathuoc = cdt.mathuoc
+            LEFT JOIN 
+                cachdung cd ON cdt.macachdung = cd.macachdung
+            LEFT JOIN
+                donvitinh dv ON dv.madonvi = t.madonvi
+            WHERE
+                tt.maphieukham = :id
+        `
+        const results = await sequelize.query(query, {
+            replacements: { id },
+            type: sequelize.QueryTypes.SELECT,
+        });
+        return results; 
+    },
     getPhieuKhamBenhs: async () =>{
         return await phieukhambenh.findAll();
     },

@@ -146,30 +146,15 @@ exports.getBenhNhanKhamBenhById = async (id) => {
                 bn.sodienthoai, bn.nghenghiep, bn.dantoc, bn.tiensu, bn.diung,bn.ghichu, 
                 pkb.maphieukham, pkb.ngaykham, pkb.trieuchung, pkb.mach,
                 pkb.nhietdo, pkb.huyetap, pkb.nhiptho, pkb.chieucao, pkb.cannang,
-                pkb.lydokham, pkb.ghichukham, pkb.loidan, pkb.ngaytaikham,
-                tt.mathuoc,tt.soluong,
-                t.tenthuoc,
-                dv.tendonvi,
-                cd.motacachdung
+                pkb.lydokham, pkb.ghichukham, pkb.loidan, pkb.ngaytaikham
             FROM 
                 benhnhan bn
              JOIN 
                 phieukhambenh pkb ON bn.mabenhnhan = pkb.mabenhnhan
-             LEFT JOIN 
-                toathuoc tt ON pkb.maphieukham = tt.maphieukham
-             LEFT JOIN 
-                thuoc t ON tt.mathuoc = t.mathuoc
-             LEFT JOIN 
-                cachdungthuoc cdt ON tt.mathuoc = cdt.mathuoc
-             LEFT JOIN 
-                cachdung cd ON cdt.macachdung = cd.macachdung
-             LEFT JOIN
-                donvitinh dv ON dv.madonvi = t.madonvi
             WHERE 
                 bn.mabenhnhan = :id
             ORDER BY 
                 pkb.ngaykham DESC;
-
         `;
 
         // Thực thi câu lệnh SQL

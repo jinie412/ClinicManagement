@@ -5,9 +5,11 @@ const router = express.Router();
 // GET METHOD
 router.get('/', phieukhambenhController.getPhieuKhamBenhs);
 router.get('/:id', phieukhambenhController.getPhieuKhamBenhById);
+router.get('/chi-tiet-toa-thuoc/:id', phieukhambenhController.getToaThuocByIdPhieuKham);
 
 // POST METHOD
 router.post('/add', phieukhambenhController.createPhieuKhamBenh);
+router.post('/new', phieukhambenhController.createNewPhieuKhamBenh);
 
 // PUT METHOD
 router.put('/update/:id', phieukhambenhController.updatePhieuKhamBenh);

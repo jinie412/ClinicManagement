@@ -144,7 +144,6 @@ module.exports = {
                 res.status(200).json({
                     success: true,
                     message: 'Disease in examination deleted successfully.',
-                    data: loaibenhtrongphieukham
                 });
             } else {
                 res.status(404).json({
