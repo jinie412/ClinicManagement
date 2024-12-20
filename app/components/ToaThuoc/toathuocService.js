@@ -1,4 +1,5 @@
 const {toathuoc, sequelize} = require('../../models/model.index');
+const { getChiTietToaThuoc } = require('./toathuocController');
 
 module.exports = {
     getToaThuocs: async () => {

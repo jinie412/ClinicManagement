@@ -1,8 +1,41 @@
 const phieukhambenhService = require('./phieukhambenhService');
 const toaThuocService = require('../ToaThuoc/toathuocService');
 const benhnhanService = require('../BenhNhan/benhnhanService');
+// const { get } = require('./phieukhambenhRouter');
 
 module.exports = {
+    getToaThuocByIdPhieuKham: async (req, res) => {
+        try {
+            const id = req.params.id;
+            if (!id) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'ID is required to fetch the prescription.'
+                });
+            }
+
+            const toathuoc = await phieukhambenhService.getToaThuocByIdPhieuKham(id);
+
+            if (toathuoc) {
+                res.status(200).json({
+                    success: true,
+                    data: toathuoc
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    message: `Prescription with ID ${id} not found.`
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching prescription by ID:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to retrieve prescription.',
+                error: error.message
+            });
+        }
+    },
     // GET /api/phieu-kham-benh
     getPhieuKhamBenhs: async (req, res ) =>{
         try {
@@ -89,6 +122,47 @@ module.exports = {
             });
 
             data.mabacsi = 1;
+            const newPhieuKhamBenh = await phieukhambenhService.createPhieuKhamBenh(data);
+
+            // Create toathuoc records if thuoc data is provided
+            if (data.thuoc && Array.isArray(data.thuoc)) {
+                for (const thuoc of data.thuoc) {
+                    await toaThuocService.createToaThuoc({
+                        maphieukham: newPhieuKhamBenh.maphieukham,
+                        mathuoc: thuoc.mathuoc,
+                        soluong: thuoc.soluong
+                    });
+                }
+            }
+
+            res.status(201).json({
+                success: true,
+                message: 'Created new invoice successfully.',
+                data: newPhieuKhamBenh
+            });
+        } catch (error) {
+            console.error('Error creating new invoice:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to create new invoice.',
+                error: error.message
+            });
+        }
+    },
+    // POST /api/phieu-kham-benh/new
+    createNewPhieuKhamBenh: async (req, res) => {
+        try {
+            const data = req.body;
+
+            if (!data) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Data is required to create a new invoice.'
+                });
+            }
+
+            data.mabacsi = 1;
+            data.trangthai = 'Chưa khám';
             const newPhieuKhamBenh = await phieukhambenhService.createPhieuKhamBenh(data);
 
             // Create toathuoc records if thuoc data is provided
