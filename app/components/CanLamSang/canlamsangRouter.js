@@ -14,9 +14,9 @@ router.post('/add', (req, res, next)=>{
 router.post('/add', canlamsangController.createCanLamSang);
 
 // PUT METHOD
-router.put('/:id', canlamsangController.updateCanLamSang);
+router.put('/update/:id', canlamsangController.updateCanLamSang);
 
 // DELETE METHOD
-router.delete('/:id', canlamsangController.deleteCanLamSang);
+router.delete('/delete/:id', canlamsangController.deleteCanLamSang);
 
 module.exports = router;

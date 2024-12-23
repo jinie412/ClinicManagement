@@ -11,7 +11,7 @@ module.exports = {
     createLoaiBenhTrongPhieuKham: async (data) => {
         const t = await sequelize.transaction();
         try {
-            const newRecord = await loaibenhtrongphieukham.create(data, { transaction: t });
+            const newRecord = await loaibenhtrongphieukham.upsert(data, { transaction: t });
             if (newRecord) {
                 await t.commit();
                 return newRecord;
@@ -28,7 +28,7 @@ module.exports = {
         try{
             const updatedRecord = await loaibenhtrongphieukham.update(
                 data, 
-                {where: {maphieukham: id.maphieukham, maloaibenh: id.maloaibenh}}, 
+                {where: {maphieukham: id}}, 
                 {transaction: t}
             );
             if(updatedRecord){

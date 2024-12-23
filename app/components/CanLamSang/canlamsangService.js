@@ -1,28 +1,54 @@
-const {canlamsang} = require('../../models/model.index');
+const { where } = require('sequelize');
+const {canlamsang, sequelize} = require('../../models/model.index');
 
 module.exports = {
     getCanLamSangs: async () => {
         return await canlamsang.findAll();
     },
     getCanLamSangById: async (id) => {
-        return await canlamsang.findByPk(id);
+        return await canlamsang.findAll({where: {maphieukham: id}});
     },
     createCanLamSang: async (data) => {
-        return await canlamsang.create(data);
+        const t = await sequelize.transaction();
+        try {
+            await canlamsang.upsert(data, {transaction: t});
+            await t.commit();
+            return true;
+        } catch (error) {
+            await t.rollback();
+            return false;
+        }
     },
     updateCanLamSang: async (id, data) => {
-        const canlamsang = await canlamsang.findByPk(id);
-        if (canlamsang) {
-            return await canlamsang.update(data);
+        const t = await sequelize.transaction();
+        try {
+            const cls = await canlamsang.findByPk(id);
+            if (cls) {
+                await cls.update(data, {transaction: t});
+                await t.commit();
+                return true;
+            }
+            await t.rollback();
+            return false;
+        } catch (error) {
+            await t.rollback();
+            return false;
         }
-        return null;
     },
     deleteCanLamSang: async (id) => {
-        const canlamsang = await canlamsang.findByPk(id);
-        if (canlamsang) {
-            await canlamsang.destroy();
-            return true;
+        const t = await sequelize.transaction();
+        try {
+            const cls = await canlamsang.destroy({where: {maphieukham: id},transaction: t});
+            if (cls) {
+                await t.commit();
+                return true;
+            }else{
+                await t.rollback();
+                return false;
+            }
+        } catch (error) {
+            await t.rollback();
+            return false;
         }
-        return false;
     }
 }

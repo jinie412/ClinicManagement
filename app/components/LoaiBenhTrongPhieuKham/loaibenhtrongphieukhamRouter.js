@@ -17,6 +17,6 @@ router.post('/add', loaibenhtrongphieukhamController.createLoaiBenhTrongPhieuKha
 router.put('/update/:maphieukham/:maloaibenh', loaibenhtrongphieukhamController.updateLoaiBenhTrongPhieuKham);
 
 // DELETE METHOD
-router.delete('/delete/:maphieukham/:maloaibenh', loaibenhtrongphieukhamController.deleteLoaiBenhTrongPhieuKham);
+router.delete('/delete/:id', loaibenhtrongphieukhamController.deleteLoaiBenhTrongPhieuKham);
 
 module.exports = router;

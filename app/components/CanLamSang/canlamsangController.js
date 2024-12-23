@@ -64,21 +64,36 @@ module.exports = {
     // POST /api/can-lam-sang/add
     createCanLamSang: async (req, res) => {
         try {
-            const { body } = req;
+            const body = req.body;
 
-            if (!body || Object.keys(body).length === 0) {
+            if (!body) {
                 return res.status(400).json({
                     success: false,
-                    message: 'subclinical data is required to create a new entry.'
+                    message: 'Data is required to create subclinical.'
                 });
             }
 
-            const canlamsang = await canlamsangService.createCanLamSang(body);
-            res.status(201).json({
-                success: true,
-                data: canlamsang,
-                message: 'subclinical created successfully.'
-            });
+            let ok = true;
+            for (const element of body) {
+                if(element.maphieukham){
+                    let result = await canlamsangService.createCanLamSang(element);
+                    if (!result) {
+                        ok = false;
+                        break;
+                    }
+                }
+            }
+            if (ok) {
+                res.status(201).json({
+                    success: true,
+                    message: 'subclinical created successfully.'
+                });
+            }else{
+                res.status(500).json({
+                    success: false,
+                    message: 'Failed to create subclinical.'
+                });
+            }
         } catch (error) {
             console.error('Error creating subclinical:', error);
             res.status(500).json({
@@ -92,8 +107,8 @@ module.exports = {
     // PUT /api/can-lam-sang/update/:id
     updateCanLamSang: async (req, res) => {
         try {
-            const { id } = req.params;
-            const { body } = req;
+            const id = req.params.id;
+            const body = req.body;
 
             const canlamsang = await canlamsangService.updateCanLamSang(id, body);
 
@@ -122,7 +137,7 @@ module.exports = {
     // DELETE /api/can-lam-sang/delete/:id
     deleteCanLamSang: async (req, res) => {
         try {
-            const { id } = req.params;
+            const id = req.params.id;
 
             if (!id) {
                 return res.status(400).json({

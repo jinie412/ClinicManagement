@@ -4,6 +4,40 @@ const benhnhanService = require('../BenhNhan/benhnhanService');
 // const { get } = require('./phieukhambenhRouter');
 
 module.exports = {
+    // GET /api/phieu-kham-benh/chan-doan/:maphieukham
+    getChanDoanByIdPhieuKham: async (req, res) => {
+        try {
+            const id = req.params.id;
+            if (!id) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'ID is required to fetch the diagnosis.'
+                });
+            }
+
+            const chanDoan = await phieukhambenhService.getChanDoanByIdPhieuKham(id);
+
+            if (chanDoan) {
+                res.status(200).json({
+                    success: true,
+                    data: chanDoan
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    message: `Diagnosis with ID ${maphieukham} not found.`
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching diagnosis by ID:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to retrieve diagnosis.',
+                error: error.message
+            });
+        }
+    },
+    // GET /api/phieu-kham-benh/chi-tiet-toa-thuoc/:id
     getToaThuocByIdPhieuKham: async (req, res) => {
         try {
             const id = req.params.id;

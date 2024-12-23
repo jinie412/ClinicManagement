@@ -1,5 +1,5 @@
 const {toathuoc, sequelize} = require('../../models/model.index');
-const { getChiTietToaThuoc } = require('./toathuocController');
+// const { getChiTietToaThuoc } = require('./toathuocController');
 
 module.exports = {
     getToaThuocs: async () => {
@@ -9,7 +9,19 @@ module.exports = {
         return await toathuoc.findByPk(id);
     },
     createToaThuoc: async (data) => {
-        return await toathuoc.bulkCreate(data);
+        const t = await sequelize.transaction();
+        try {
+            const newToaThuoc = await toathuoc.upsert(data, {transaction: t});
+            if (newToaThuoc) {
+                await t.commit();
+                return newToaThuoc;
+            }
+            await t.rollback();
+            return null;
+        } catch (error) {
+            await t.rollback();
+            throw error;
+        }
     },
     updateToaThuoc: async (id, data) => {
         const t = await sequelize.transaction();

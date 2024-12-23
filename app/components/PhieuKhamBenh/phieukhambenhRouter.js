@@ -6,6 +6,7 @@ const router = express.Router();
 router.get('/', phieukhambenhController.getPhieuKhamBenhs);
 router.get('/:id', phieukhambenhController.getPhieuKhamBenhById);
 router.get('/chi-tiet-toa-thuoc/:id', phieukhambenhController.getToaThuocByIdPhieuKham);
+router.get('/chan-doan/:id', phieukhambenhController.getChanDoanByIdPhieuKham);
 
 // POST METHOD
 router.post('/add', phieukhambenhController.createPhieuKhamBenh);
