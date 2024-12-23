@@ -1,6 +1,4 @@
 const {phieukhambenh, sequelize} = require('../../models/model.index');
-const cachdungthuocController = require('../CachDungThuoc/cachdungthuocController');
-// const { get } = require('./phieukhambenhRouter');
 
 // Hàm đổi tên key trong object
 const renameKeys = (obj, keyMap) => {
@@ -51,11 +49,29 @@ const keyMapEngToVi = {
 };
 
 module.exports = {
+    getChanDoanByIdPhieuKham: async (id) => {
+        const query = `
+            SELECT
+                lb.tenloaibenh
+            FROM
+                loaibenhtrongphieukham lbpk
+            LEFT JOIN
+                loaibenh lb ON lbpk.maloaibenh = lb.maloaibenh
+            WHERE
+                lbpk.maphieukham = :id
+        `
+        const results = await sequelize.query(query,{
+            replacements: { id },
+            type: sequelize.QueryTypes.SELECT,
+        })
+
+        return results;
+    },
     getToaThuocByIdPhieuKham: async (id) => {
         const query =`
             SELECT
                 tt.mathuoc,tt.soluong,
-                t.tenthuoc,
+                t.tenthuoc, t.soluongnhap, t.soluongcon,
                 dv.tendonvi,
                 cd.motacachdung
             FROM
@@ -86,7 +102,7 @@ module.exports = {
     createPhieuKhamBenh: async(data) =>{
         const t = await sequelize.transaction();
         try {
-            const newRecord = await phieukhambenh.create(data, { transaction: t });
+            const newRecord = await phieukhambenh.upsert(data, { transaction: t });
             await t.commit();
             return newRecord;
         } catch (error) {

@@ -1,7 +1,7 @@
 const toathuocService = require('./toathuocService');
 
 module.exports = {
-    // GET /api/toathuoc
+    // GET /api/toa-thuoc
     getToaThuocs: async (req, res) => {
         try {
             const toathuoc = await toathuocService.getToaThuocs();
@@ -26,7 +26,7 @@ module.exports = {
         }
     },
 
-    // GET /api/toathuoc/:id
+    // GET /api/toa-thuoc/:id
     getToaThuocById: async (req, res) => {
         try {
             const {id} = req.params;
@@ -61,23 +61,30 @@ module.exports = {
         }
     },
 
-    // POST /api/toathuoc/add
+    // POST /api/toa-thuoc/add
     createToaThuoc: async (req, res) => {
         try {
-            const toathuoc = req.body;
-            if (!toathuoc) {
+            const body = req.body;
+            console.log('controller log:', body);
+            if (!body) {
                 return res.status(400).json({
                     success: false,
                     message: 'Prescription details are required.'
                 });
             }
-
-            const newToaThuoc = await toathuocService.createToaThuoc(toathuoc);
-
-            if (newToaThuoc) {
-                res.status(201).json({
+            let ok = true;
+            for (const element of body) {
+                if (element.mathuoc) {
+                    let result = await toathuocService.createToaThuoc(element);
+                    if (!result) {
+                        ok = false;
+                        break;
+                    }
+                }
+            }
+            if (ok) {
+                res.status(200).json({
                     success: true,
-                    data: newToaThuoc,
                     message: 'Prescription created successfully !'
                 });
             } else {
@@ -96,7 +103,7 @@ module.exports = {
         }
     },
 
-    // PUT /api/toathuoc/update/:id
+    // PUT /api/toa-thuoc/update/:id
     updateToaThuoc: async (req, res) => {
         try {
             const id = req.params;
@@ -139,7 +146,7 @@ module.exports = {
         }
     },
 
-    // DELETE /api/toathuoc/delete/:maphieukham/:mathuoc
+    // DELETE /api/toa-thuoc/delete/:maphieukham/:mathuoc
     deleteToaThuoc: async (req, res) => {
         try {
             const id = req.params;

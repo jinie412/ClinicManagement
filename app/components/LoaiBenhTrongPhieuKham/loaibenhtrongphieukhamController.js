@@ -91,10 +91,7 @@ module.exports = {
     updateLoaiBenhTrongPhieuKham: async (req, res) => {
         try {
             const data = req.body;
-            const maphieukham = req.params.maphieukham;
-            const maloaibenh = req.params.maloaibenh;
-            const id = {maphieukham, maloaibenh};
-            console.log('id', id);
+            const id = req.params.id;
 
             if (!id) {
                 return res.status(400).json({

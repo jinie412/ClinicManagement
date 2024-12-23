@@ -146,11 +146,16 @@ exports.getBenhNhanKhamBenhById = async (id) => {
                 bn.sodienthoai, bn.nghenghiep, bn.dantoc, bn.tiensu, bn.diung,bn.ghichu, 
                 pkb.maphieukham, pkb.ngaykham, pkb.trieuchung, pkb.mach,
                 pkb.nhietdo, pkb.huyetap, pkb.nhiptho, pkb.chieucao, pkb.cannang,
-                pkb.lydokham, pkb.ghichukham, pkb.loidan, pkb.ngaytaikham
+                pkb.lydokham, pkb.ghichukham, pkb.loidan, pkb.ngaytaikham,
+                lb.maloaibenh, lb.tenloaibenh
             FROM 
                 benhnhan bn
-             JOIN 
+            JOIN 
                 phieukhambenh pkb ON bn.mabenhnhan = pkb.mabenhnhan
+            LEFT JOIN
+                loaibenhtrongphieukham lbpk ON pkb.maphieukham = lbpk.maphieukham
+            LEFT JOIN
+                loaibenh lb ON lbpk.maloaibenh = lb.maloaibenh
             WHERE 
                 bn.mabenhnhan = :id
             ORDER BY 
