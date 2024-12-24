@@ -242,5 +242,38 @@ module.exports = {
                 error: error.message
             });
         }
+    },
+    getMedicalHistory: async (req, res) => {
+        try {
+            const id = req.params.id;
+
+            if (!id) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Patient ID is required.'
+                });
+            }
+
+            const history = await benhnhanService.getMedicalHistory(id);
+            if (history) {
+                res.status(200).json({
+                    success: true,
+                    data: history,
+                    message: 'Retrieved patient history successfully.'
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    message: `Patient with ID ${id} not found.`
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching patient history:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to retrieve patient history.',
+                error: error.message
+            });
+        }
     }
 };

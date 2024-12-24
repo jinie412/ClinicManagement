@@ -9,6 +9,7 @@ router.get('/getkhambenh', benhnhanController.getBenhNhanKhamBenh);
 router.get('/:id', benhnhanController.getBenhNhanById);
 
 router.get('/getkhambenh/:id', benhnhanController.getBenhNhanKhamBenhById);
+router.get('/medical-history/:id', benhnhanController.getMedicalHistory);
 
 // POST METHOD
 router.post('/add', benhnhanController.createAndUpateBenhNhan);

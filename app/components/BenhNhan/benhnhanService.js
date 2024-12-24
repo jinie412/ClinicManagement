@@ -147,7 +147,7 @@ exports.getBenhNhanKhamBenhById = async (id) => {
                 pkb.maphieukham, pkb.ngaykham, pkb.trieuchung, pkb.mach,
                 pkb.nhietdo, pkb.huyetap, pkb.nhiptho, pkb.chieucao, pkb.cannang,
                 pkb.lydokham, pkb.ghichukham, pkb.loidan, pkb.ngaytaikham,
-                lb.maloaibenh, lb.tenloaibenh
+                lb.maloaibenh, lb.tenloaibenh, pkb.trangthai
             FROM 
                 benhnhan bn
             JOIN 
@@ -242,4 +242,35 @@ exports.updatePatient = async (id,data) => {
         throw error;
     }
 };
+
+exports.getMedicalHistory = async (id) => {
+    try {
+        const query = `
+            SELECT 
+                pkb.ngaykham, pkb.trieuchung,
+                pkb.ghichukham, pkb.ngaytaikham,
+                lb.tenloaibenh
+            FROM 
+                phieukhambenh pkb
+            LEFT JOIN
+                loaibenhtrongphieukham lbpk ON pkb.maphieukham = lbpk.maphieukham
+            LEFT JOIN
+                loaibenh lb ON lbpk.maloaibenh = lb.maloaibenh
+            WHERE 
+                pkb.mabenhnhan = :id
+            ORDER BY 
+                pkb.ngaykham DESC;
+        `;
+
+        const results = await sequelize.query(query, {
+            replacements: { id },
+            type: sequelize.QueryTypes.SELECT,
+        });
+
+        return results;
+    } catch (error) {
+        console.error('Error fetching patient data:', error);
+        throw error;
+    }
+}
 
