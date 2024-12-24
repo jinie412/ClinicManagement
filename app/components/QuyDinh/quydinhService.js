@@ -18,12 +18,19 @@ module.exports = {
             return false;
         }
     },
-    updateQuyDinh: async(id, data) =>{
+    updateQuyDinh: async (maquydinh, soluongbenhnhantoida, tienkham) => {
         const t = await sequelize.transaction();
         try {
-            const qd = await quydinh.findByPk(id);
-            if(qd){
-                await qd.update(data, {transaction: t});
+            const qd = await quydinh.findByPk(maquydinh);
+            if (qd) {
+                await qd.update(
+                    {
+                        maquydinh: maquydinh,
+                        soluongbenhnhantoida: soluongbenhnhantoida,
+                        tienkham: tienkham
+                    },
+                    { transaction: t }
+                );
                 await t.commit();
                 return true;
             }
@@ -34,20 +41,44 @@ module.exports = {
             return false;
         }
     },
-    deleteQuyDinh: async(id) =>{
-        const t = await sequelize.transaction();
+    increaseLoaiBenh: async() =>{
         try {
-            const qd = await quydinh.findByPk(id);
+            const qd = await quydinh.findOne({
+                where: {
+                    maquydinh: 1
+                }
+            });
             if(qd){
-                await qd.destroy({transaction: t});
-                await t.commit();
-                return true;
+                await qd.update({
+                    soluongloaibenh: qd.soluongloaibenh + 1
+                });
+                console.log("Quy dinh:", qd);
+                return qd;
             }
-            await t.rollback();
-            return false;
-        } catch (error) {
-            await t.rollback();
-            return false;
+            return null;
         }
-    }
+        catch (error) {
+            return null;
+        }
+    },
+    decreaseLoaiBenh: async() =>{
+        try {
+            const qd = await quydinh.findOne({
+                where: {
+                    maquydinh: 1
+                }
+            });
+            if(qd){
+                await qd.update({
+                    soluongloaibenh: qd.soluongloaibenh - 1
+                });
+                console.log("Quy dinh:", qd);
+                return qd;
+            }
+            return null;
+        }
+        catch (error) {
+            return null;
+        }
+    },
 }

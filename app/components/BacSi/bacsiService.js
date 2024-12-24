@@ -18,10 +18,11 @@ module.exports = {
     createBacSi: async (data) => {
         return await bacsi.create(data);
     },
-    updateBacSi: async (id, data) => {
-        const bacsi = await bacsi.findByPk(id);
-        if (bacsi) {
-            return await bacsi.update(data);
+    updateBacSi: async (mabacsi, data) => {
+        console.log("Update:", mabacsi, data);
+        const doctor = await bacsi.findByPk(mabacsi);
+        if (doctor) {
+            return await doctor.update(data);
         }
         return null;
     },
@@ -32,5 +33,22 @@ module.exports = {
             return true;
         }
         return false;
-    }
+    },
+    getBacSi : async () => {
+        return await bacsi.findAll({
+            include: [
+                {
+                    model: taikhoan,
+                    as: 'taikhoan'
+                }
+            ]
+        });
+    },
+    changePassword: async (username, newPassword) => {
+        const account = await taikhoan.findOne({ where: { tentaikhoan: username } });
+        if (account) {
+            return await account.update({ matkhau: newPassword });
+        }
+        return null;
+    },
 }
