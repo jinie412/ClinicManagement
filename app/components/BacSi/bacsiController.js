@@ -20,7 +20,7 @@ module.exports = {
                     data: bacsi,
                     message: 'Login successful.'
                 });
-            } 
+            }
 
             return res.status(404).json({
                 success: false,
@@ -124,18 +124,10 @@ module.exports = {
         }
     },
 
-    // PUT /api/bac-si/update/:id
+    // PUT /api/bac-si/update/
     updateBacSi: async (req, res) => {
         try {
-            const { id } = req.params;
             const { body } = req;
-
-            if (!id) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Doctor ID is required to update the record.'
-                });
-            }
 
             if (!body || Object.keys(body).length === 0) {
                 return res.status(400).json({
@@ -144,7 +136,7 @@ module.exports = {
                 });
             }
 
-            const bacsi = await bacsiService.updateBacSi(id, body);
+            const bacsi = await bacsiService.updateBacSi(body.mabacsi, body);
             if (bacsi) {
                 return res.status(200).json({
                     success: true,
@@ -199,5 +191,70 @@ module.exports = {
                 error: error.message
             });
         }
-    }
-};
+    },
+    getBacSiInfo: async (req, res) => {
+        try {
+            const bacsi = await bacsiService.getBacSi();
+            if (bacsi) {
+                return res.status(200).json({
+                    success: true,
+                    data: bacsi,
+                    message: 'Retrieved doctor details successfully.'
+                });
+            }
+            res.status(404).json({
+                success: false,
+                message: `Doctor with ID ${id} not found.`
+            });
+        } catch (error) {
+            console.error('Error fetching doctor details:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to retrieve doctor details.',
+                error: error.message
+            });
+        }
+    },
+    changePassword: async (req, res) => {
+        try {
+            const { username, currentPassword, newPassword } = req.body;
+    
+            if (!username || !currentPassword || !newPassword) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Username, current password, and new password are required.'
+                });
+            }
+    
+            // Verify the current password
+            const account = await bacsiService.login({ username, password: currentPassword });
+            if (!account) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Current password is incorrect.'
+                });
+            }
+    
+            // Change the password
+            const result = await bacsiService.changePassword(username, newPassword);
+            if (result) {
+                return res.status(200).json({
+                    success: true,
+                    message: 'Changed password successfully.'
+                });
+            } else {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Failed to change password.'
+                });
+            }
+        } catch (error) {
+            console.error('Error changing password:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to change password.',
+                error: error.message
+            });
+        }
+    },
+}

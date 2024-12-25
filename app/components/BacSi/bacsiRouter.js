@@ -3,17 +3,17 @@ const bacsiController = require('./bacsiController');
 const router = express.Router();
 
 router.post('/login', bacsiController.login);
+router.put('/change-password', bacsiController.changePassword);
 
 router.get('/', bacsiController.getBacSis);
-router.get('/:id', bacsiController.getBacSiById);
 
-router.get('/add', (req, res, next) => {
-    console.log('Router log:', req.body);
-    next();
-  });
-router.post('/add', bacsiController.createBacSi);
+router.get('/info', bacsiController.getBacSiInfo);
 
-router.put('/update/:id', bacsiController.updateBacSi);
-router.delete('/delete/:id', bacsiController.deleteBacSi);
+//router.post('/add', bacsiController.createBacSi);
+
+router.put('/update', bacsiController.updateBacSi);
+
+//router.put('/update/:id', bacsiController.updateBacSi);
+//router.delete('/delete/:id', bacsiController.deleteBacSi);
 
 module.exports = router;

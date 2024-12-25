@@ -1,4 +1,5 @@
 const loaibenhService = require('./loaibenhService');
+const quydinhService = require('../QuyDinh/quydinhService');
 
 module.exports = {
     // GET /api/loaibenh
@@ -67,10 +68,12 @@ module.exports = {
 
             const newLoaiBenh = await loaibenhService.createLoaiBenh(body);
 
+            const quydinh = await quydinhService.increaseLoaiBenh();
+
             res.status(201).json({
                 success: true,
                 message: 'Disease created successfully.',
-                data: newLoaiBenh
+                data: newLoaiBenh, quydinh
             });
         } catch (error) {
             console.error('Error creating disease:', error);
@@ -138,11 +141,13 @@ module.exports = {
 
             const deletedLoaiBenh = await loaibenhService.deleteLoaiBenh(id);
 
+            const quydinh = await quydinhService.decreaseLoaiBenh();
+
             if (deletedLoaiBenh) {
                 res.status(200).json({
                     success: true,
                     message: 'Disease deleted successfully.',
-                    data: deletedLoaiBenh
+                    data: deletedLoaiBenh, quydinh
                 });
             } else {
                 res.status(404).json({

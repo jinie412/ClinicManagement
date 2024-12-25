@@ -6,17 +6,7 @@ const router = express.Router();
 router.get('/', quydinhController.getQuyDinhs);
 router.get('/:id', quydinhController.getQuyDinhById);
 
-// POST METHOD
-router.post('/add', (req, res, next)=>{
-    console.log("router log:", req.body);
-    next();
-})
-router.post('/add', quydinhController.createQuyDinh);
-
 // PUT METHOD
-router.put('/update/:id', quydinhController.updateQuyDinh);
-
-// DELETE METHOD
-router.delete('/delete/:id', quydinhController.deleteQuyDinh);
+router.put('/update', quydinhController.updateQuyDinh);
 
 module.exports = router;
