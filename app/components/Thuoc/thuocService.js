@@ -105,22 +105,34 @@ module.exports = {
         return await thuoc.findByPk(id);
     },
     createThuoc: async (data) => {
-        return await thuoc.create(data);
+        return await thuoc.upsert(data);
     },
     updateThuoc: async (id, data) => {
-        const thuoc = await thuoc.findByPk(id);
-        if (thuoc) {
-            return await thuoc.update(data);
+        const t = await sequelize.transaction();
+        try{
+
+            const updatedThuoc = await thuoc.update(
+                data, 
+                { where: { mathuoc: id }, transaction: t }
+            );
+            await t.commit();
+            return updatedThuoc;
+
+        } catch (error) {
+            await t.rollback();
+            throw error;
         }
-        return null;
     },
     deleteThuoc: async (id) => {
-        const thuoc = await thuoc.findByPk(id);
-        if (thuoc) {
-            await thuoc.destroy();
+        const t = await sequelize.transaction();
+        try {
+            await thuoc.destroy({ where: { mathuoc: id }, transaction: t });
+            await t.commit();
             return true;
+        } catch (error) {
+            await t.rollback();
+            throw error;
         }
-        return false;
     },
 }
 
