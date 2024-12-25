@@ -119,16 +119,16 @@ module.exports = {
     // POST /api/thuoc/add
     createThuoc: async (req, res) => {
         try {
-            const thuoc = req.body;
+            const body = req.body;
 
-            if (!thuoc) {
+            if (!body) {
                 return res.status(400).json({
                     success: false,
                     message: 'Medication details are required.'
                 });
             }
 
-            const newThuoc = await thuocService.createThuoc(thuoc);
+            const newThuoc = await thuocService.createThuoc(body);
 
             res.status(201).json({
                 success: true,
@@ -149,7 +149,7 @@ module.exports = {
     updateThuoc: async (req, res) => {
         try {
             const id = req.params.id;
-            const thuoc = req.body;
+            const body = req.body;
 
             if (!id) {
                 return res.status(400).json({
@@ -158,14 +158,14 @@ module.exports = {
                 });
             }
 
-            if (!thuoc) {
+            if (!body) {
                 return res.status(400).json({
                     success: false,
                     message: 'Medication details are required.'
                 });
             }
 
-            const updatedThuoc = await thuocService.updateThuoc(id, thuoc);
+            const updatedThuoc = await thuocService.updateThuoc(id, body);
 
             if (updatedThuoc) {
                 res.status(200).json({
