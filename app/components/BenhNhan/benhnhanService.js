@@ -247,8 +247,8 @@ exports.getMedicalHistory = async (id) => {
     try {
         const query = `
             SELECT 
-                pkb.ngaykham, pkb.trieuchung,
-                pkb.ghichukham, pkb.ngaytaikham,
+                pkb.maphieukham, pkb.ngaykham, pkb.trieuchung,
+                pkb.ghichukham, pkb.ngaytaikham, pkb.lydokham,
                 lb.tenloaibenh
             FROM 
                 phieukhambenh pkb

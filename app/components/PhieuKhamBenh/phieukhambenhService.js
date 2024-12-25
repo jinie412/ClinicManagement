@@ -79,9 +79,7 @@ module.exports = {
             LEFT JOIN 
                 thuoc t ON tt.mathuoc = t.mathuoc
             LEFT JOIN 
-                cachdungthuoc cdt ON tt.mathuoc = cdt.mathuoc
-            LEFT JOIN 
-                cachdung cd ON cdt.macachdung = cd.macachdung
+                cachdung cd ON cd.macachdung = tt.macachdung
             LEFT JOIN
                 donvitinh dv ON dv.madonvi = t.madonvi
             WHERE
