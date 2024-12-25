@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
     soluong: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    macachdung: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     tableName: 'toathuoc',
