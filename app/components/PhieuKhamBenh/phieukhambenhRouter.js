@@ -4,6 +4,7 @@ const router = express.Router();
 
 // GET METHOD
 router.get('/', phieukhambenhController.getPhieuKhamBenhs);
+router.get('/chi-tiet', phieukhambenhController.getChiTietPhieuKham);
 router.get('/:id', phieukhambenhController.getPhieuKhamBenhById);
 router.get('/chi-tiet-toa-thuoc/:id', phieukhambenhController.getToaThuocByIdPhieuKham);
 router.get('/chan-doan/:id', phieukhambenhController.getChanDoanByIdPhieuKham);

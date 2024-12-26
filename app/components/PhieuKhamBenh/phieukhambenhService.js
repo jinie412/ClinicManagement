@@ -71,7 +71,7 @@ module.exports = {
         const query =`
             SELECT
                 tt.mathuoc,tt.soluong,
-                t.tenthuoc, t.soluongnhap, t.soluongcon,
+                t.tenthuoc, t.soluongnhap, t.soluongcon,t.dongia,
                 dv.tendonvi,
                 cd.motacachdung
             FROM
@@ -90,6 +90,33 @@ module.exports = {
             type: sequelize.QueryTypes.SELECT,
         });
         return results; 
+    },
+    getChiTietPhieuKham: async () => {
+        const query =`
+            SELECT
+                pkb.maphieukham, pkb.ngaykham, pkb.trieuchung, 
+                bs.hoten as tenbacsi,
+                bn.mabenhnhan, bn.hoten, bn.diachi, bn.sodienthoai, bn.ngaysinh, bn.gioitinh,
+                lb.tenloaibenh
+            FROM
+                phieukhambenh pkb
+            LEFT JOIN
+                benhnhan bn ON pkb.mabenhnhan = bn.mabenhnhan
+            LEFT JOIN
+                bacsi bs ON pkb.mabacsi = bs.mabacsi
+            LEFT JOIN
+                loaibenhtrongphieukham lbpk ON pkb.maphieukham = lbpk.maphieukham
+            LEFT JOIN
+                loaibenh lb ON lbpk.maloaibenh = lb.maloaibenh
+            ORDER BY
+                pkb.ngaykham DESC
+        `;
+        const results = await sequelize
+            .query(query, {
+                type: sequelize.QueryTypes.SELECT,
+            });
+
+        return results;
     },
     getPhieuKhamBenhs: async () =>{
         return await phieukhambenh.findAll();

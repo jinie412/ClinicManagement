@@ -128,6 +128,32 @@ module.exports = {
             });
         }
     },
+    // GET /api/phieukhambenh/chi-tiet
+    getChiTietPhieuKham: async (req, res) => {
+        try {
+
+            const phieukhambenh = await phieukhambenhService.getChiTietPhieuKham();
+
+            if (phieukhambenh) {
+                res.status(200).json({
+                    success: true,
+                    data: phieukhambenh
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    message: 'Invoice not found.'
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching invoice:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to retrieve invoice.',
+                error: error.message
+            });
+        }
+    },
     // POST /api/phieukhambenh/add
     createPhieuKhamBenh: async (req, res) => {
         try {

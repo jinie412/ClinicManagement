@@ -8,7 +8,7 @@ module.exports = {
         return await hoadon.findByPk(id);
     },
     createHoaDon: async (data) => {
-        return await hoadon.create(data);
+        return await hoadon.upsert(data);
     },
     updateHoaDon: async (id, data) => {
         const hoadon = await hoadon.findByPk(id);
