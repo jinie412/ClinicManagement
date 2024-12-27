@@ -37,6 +37,11 @@ module.exports = (sequelize, DataTypes) => {
         model: 'donvitinh',
         key: 'madonvi'
       }
+    },
+    tinhtrang: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
     }
   }, {
     tableName: 'thuoc',

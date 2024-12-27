@@ -6,10 +6,6 @@ const router = express.Router();
 router.get('/', cachdungController.getCachDungs);
 
 // POST METHOD
-router.post('/add', (req, res, next)=>{
-    console.log("router log:", req.body);
-    next();
-})
 router.post('/add', cachdungController.createCachDung);
 
 // PUT METHOD

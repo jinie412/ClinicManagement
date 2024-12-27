@@ -1,4 +1,5 @@
 const donvitinhService = require('./donvitinhService');
+const quydinhService = require('../QuyDinh/quydinhService');
 
 module.exports = {
     // GET /api/donvitinh
@@ -74,12 +75,15 @@ module.exports = {
                     message: 'Unit data is required to create a new entry.'
                 });
             }
+            const quydinh = await quydinhService.increaseUnit();
 
             const donvitinh = await donvitinhService.createDonViTinh(body);
+
+            
             res.status(201).json({
                 success: true,
                 message: 'Unit created successfully.',
-                data: donvitinh
+                data: donvitinh, quydinh
             });
         } catch (error) {
             console.error('Error creating unit:', error);
@@ -140,7 +144,10 @@ module.exports = {
                 });
             }
 
+            quydinhService.decreaseUnit();
+            
             const result = await donvitinhService.deleteDonViTinh(id);
+
 
             if (result) {
                 res.status(200).json({

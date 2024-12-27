@@ -7,9 +7,10 @@ router.get('/getphieukhambenhs', thuocController.getThuocPhieuKhamBenhs);
 router.get('/getphieukhambenhs/:id', thuocController.getThuocKhamBenhById);
 router.get('/:id', thuocController.getThuocById);
 
-router.post('/add', thuocController.createThuoc);
+// router.post('/add', thuocController.createThuoc);
+router.post('/increaseMedicine', thuocController.increaseMedicine);
 
-router.put('/update/:id', thuocController.updateThuoc);
+router.put('/update', thuocController.updateThuoc);
 
 router.delete('/delete/:id', thuocController.deleteThuoc);
 

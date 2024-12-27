@@ -1,4 +1,6 @@
 const thuocService = require('./thuocService'); 
+const quydinhService = require('../QuyDinh/quydinhService');
+const donvitinhService = require('../DonViTinh/donvitinhService');
 
 module.exports = {
     // GET /api/thuoc/getphieukhambenhs/:id
@@ -130,6 +132,8 @@ module.exports = {
 
             const newThuoc = await thuocService.createThuoc(body);
 
+            quydinhService.increaseMedicine();
+
             res.status(201).json({
                 success: true,
                 message: 'Medication created successfully.',
@@ -140,50 +144,6 @@ module.exports = {
             res.status(500).json({
                 success: false,
                 message: 'Failed to create medication.',
-                error: error.message
-            });
-        }
-    },
-
-    // PUT /api/thuoc/update/:id
-    updateThuoc: async (req, res) => {
-        try {
-            const id = req.params.id;
-            const body = req.body;
-
-            if (!id) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'ID is required to update medication.'
-                });
-            }
-
-            if (!body) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Medication details are required.'
-                });
-            }
-
-            const updatedThuoc = await thuocService.updateThuoc(id, body);
-
-            if (updatedThuoc) {
-                res.status(200).json({
-                    success: true,
-                    message: 'Medication updated successfully.',
-                    data: updatedThuoc
-                });
-            } else {
-                res.status(404).json({
-                    success: false,
-                    message: `Medication with ID ${id} not found.`
-                });
-            }
-        } catch (error) {
-            console.error('Error updating medication:', error);
-            res.status(500).json({
-                success: false,
-                message: 'Failed to update medication.',
                 error: error.message
             });
         }
@@ -203,6 +163,8 @@ module.exports = {
 
             const deletedThuoc = await thuocService.deleteThuoc(id);
 
+            quydinhService.descreaseMedicine();
+
             if (deletedThuoc) {
                 res.status(200).json({
                     success: true,
@@ -220,6 +182,114 @@ module.exports = {
             res.status(500).json({
                 success: false,
                 message: 'Failed to delete medication.',
+                error: error.message
+            });
+        }
+    },
+    increaseMedicine: async (req, res) => {
+        try {
+            const { tenthuoc, tendonvi, soluongnhap, soluongcon, cachdungthuocs, dongia } = req.body;
+
+            if (!tenthuoc || !tendonvi || !soluongnhap || !soluongcon || !cachdungthuocs || !dongia) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'All fields are required: tenthuoc, soluongnhap, soluongcon, cachdungthuocs, dongia.'
+                });
+            }
+
+            // Get madonvi from donvitinh with tendonvi
+            const donvitinh = await donvitinhService.getDonViTinhByTen(tendonvi);
+            if (!donvitinh) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid tendonvi.'
+                });
+            }
+            console.log(donvitinh);
+
+            const madonvi = donvitinh.dataValues.madonvi;
+
+            //increase medicine in table quydinh
+            quydinhService.increaseMedicine();
+
+            const result = await thuocService.increaseMedicine({ tenthuoc, madonvi, soluongnhap, soluongcon, cachdungthuocs, dongia });
+
+            if (result) {
+                res.status(200).json({
+                    success: true,
+                    message: 'Medicine increased successfully.',
+                    data: result
+                });
+            } else {
+                res.status(500).json({
+                    success: false,
+                    message: 'Failed to increase medicine.'
+                });
+            }
+        } catch (error) {
+            console.error('Error increasing medicine:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to increase medicine.',
+                error: error.message
+            });
+        }
+    },
+
+    // PUT /api/thuoc/update/:id
+    updateThuoc: async (req, res) => {
+        try {
+            const { mathuoc, name, unit, inputQuantity, remainingQuantity, usage, price } = req.body;
+            console.log('body:', req.body);
+    
+            if (!mathuoc || !name || !unit || !inputQuantity || !remainingQuantity || !usage || !price) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'All fields are required: mathuoc, name, unit, inputQuantity, remainingQuantity, usage, price.'
+                });
+            }
+    
+            // Get madonvi from donvitinh with unit
+            const donvitinh = await donvitinhService.getDonViTinhByTen(unit);
+            if (!donvitinh) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid unit.'
+                });
+            }
+    
+            const madonvi = donvitinh.dataValues.madonvi;
+    
+            // Update medicine in table thuoc
+            const updatedMedicine = await thuocService.updateThuoc(
+                {
+                    mathuoc,
+                    tenthuoc: name,
+                    madonvi,
+                    soluongnhap: inputQuantity,
+                    soluongcon: remainingQuantity,
+                    cachdungthuocs: usage,
+                    dongia: price
+                }
+            );
+    
+            if (updatedMedicine) {
+                res.status(200).json({
+                    success: true,
+                    message: 'Medicine updated successfully.',
+                    data: updatedMedicine
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    message: `Medicine with ID ${mathuoc} not found.`
+                });
+            }
+        } catch (error) {
+            console.error('Error updating medicine:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to update medicine.',
                 error: error.message
             });
         }

@@ -23,5 +23,10 @@ module.exports = {
             return await dvt.destroy();
         }
         return null;
+    },
+    getDonViTinhByTen: async(ten) =>{
+        return await donvitinh.findOne({
+            where: {tendonvi: ten}
+        });
     }
 }
