@@ -150,7 +150,7 @@ exports.getBenhNhanKhamBenhById = async (id) => {
                 lb.maloaibenh, lb.tenloaibenh, pkb.trangthai
             FROM 
                 benhnhan bn
-            JOIN 
+            LEFT JOIN 
                 phieukhambenh pkb ON bn.mabenhnhan = pkb.mabenhnhan
             LEFT JOIN
                 loaibenhtrongphieukham lbpk ON pkb.maphieukham = lbpk.maphieukham
