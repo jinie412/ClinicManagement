@@ -32,20 +32,20 @@ module.exports = {
         SELECT 
             TO_CHAR(pk.ngaykham, 'MM-YYYY') AS thang_nam,
             SUM(tt.soluong * t.dongia) AS doanh_thu_thuoc,
-            SUM(qd.tienkham) AS doanh_thu_kham,
-            SUM(tt.soluong * t.dongia) + SUM(qd.tienkham) AS tong_doanh_thu
+            COUNT(DISTINCT pk.maphieukham) * qd.tienkham AS doanh_thu_kham,
+            SUM(tt.soluong * t.dongia) + (COUNT(DISTINCT pk.maphieukham) * qd.tienkham) AS tong_doanh_thu
         FROM 
             phieukhambenh pk
         JOIN 
             toathuoc tt ON pk.maphieukham = tt.maphieukham
-        CROSS JOIN
-            quydinh qd
+        JOIN 
+            quydinh qd ON true
         JOIN 
             thuoc t ON tt.mathuoc = t.mathuoc
         WHERE
             pk.trangthai = 'Đã khám'
         GROUP BY 
-            TO_CHAR(pk.ngaykham, 'MM-YYYY')
+            TO_CHAR(pk.ngaykham, 'MM-YYYY'), qd.tienkham
         ORDER BY 
             TO_CHAR(pk.ngaykham, 'MM-YYYY');
         `;
@@ -65,20 +65,20 @@ module.exports = {
             TO_CHAR(pk.ngaykham, 'DD-MM-YYYY') AS ngay_thang_nam,
             COUNT (DISTINCT pk.maphieukham) AS so_benh_nhan,
             SUM(tt.soluong * t.dongia) AS doanh_thu_thuoc,
-            SUM(qd.tienkham) AS doanh_thu_kham,
-            SUM(tt.soluong * t.dongia) + SUM(qd.tienkham) AS tong_doanh_thu
+            COUNT(DISTINCT pk.maphieukham) * qd.tienkham AS doanh_thu_kham,
+            SUM(tt.soluong * t.dongia) + (COUNT(DISTINCT pk.maphieukham) * qd.tienkham) AS tong_doanh_thu
         FROM 
             phieukhambenh pk
         JOIN 
             toathuoc tt ON pk.maphieukham = tt.maphieukham
         JOIN 
             thuoc t ON tt.mathuoc = t.mathuoc
-        CROSS JOIN
-            quydinh qd
+        JOIN 
+            quydinh qd ON true
         WHERE
             pk.trangthai = 'Đã khám'
         GROUP BY 
-            TO_CHAR(pk.ngaykham, 'DD-MM-YYYY')
+            TO_CHAR(pk.ngaykham, 'DD-MM-YYYY'), qd.tienkham
         ORDER BY 
             TO_CHAR(pk.ngaykham, 'DD-MM-YYYY');
         `;
