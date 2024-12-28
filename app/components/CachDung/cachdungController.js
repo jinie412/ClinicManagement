@@ -1,4 +1,5 @@
 const cachdungService = require('./cachdungService');
+const quydinhService = require('../QuyDinh/quydinhService');
 
 module.exports = {
     // GET /api/cach-dung
@@ -39,11 +40,15 @@ module.exports = {
                     message: 'Data is required to create a new use.'
                 });
             }
+            
+            const quydinh = await quydinhService.increaseInstruction();
 
             const cachdung = await cachdungService.createCachDung(body);
+
+
             res.status(201).json({
                 success: true,
-                data: cachdung,
+                data: cachdung,quydinh,
                 message: 'Created use successfully.'
             });
         } catch (error) {
@@ -112,11 +117,15 @@ module.exports = {
                 });
             }
 
+            const quydinh = await quydinhService.decreaseInstruction();
+
             const result = await cachdungService.deleteCachDung(id);
+
 
             if (result) {
                 res.status(200).json({
                     success: true,
+                    data: quydinh,
                     message: 'Deleted use successfully.'
                 });
             } else {

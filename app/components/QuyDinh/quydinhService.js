@@ -81,4 +81,127 @@ module.exports = {
             return null;
         }
     },
+    increaseMedicine: async() =>{
+        try {
+            const qd = await quydinh.findOne({
+                where: {
+                    maquydinh: 1
+                }
+            });
+            if(qd){
+                await qd.update({
+                    soluongloaithuoc: qd.soluongloaithuoc + 1
+                });
+                console.log("Quy dinh:", qd);
+                return qd;
+            }
+            return null;
+        }
+        catch (error) {
+            return null;
+        }
+    },
+    descreaseMedicine: async() =>{
+        try {
+            const qd = await quydinh.findOne({
+                where: {
+                    maquydinh: 1
+                }
+            });
+            if(qd){
+                await qd.update({
+                    soluongloaithuoc: qd.soluongloaithuoc - 1
+                });
+                console.log("Quy dinh:", qd);
+                return qd;
+            }
+            return null;
+        }
+        catch (error) {
+            return null;
+        }
+    },
+    increaseUnit: async() =>{
+        try {
+            const qd = await quydinh.findOne({
+                where: {
+                    maquydinh: 1
+                }
+            });
+            if(qd){
+                await qd.update({
+                    soluongloaidonvi: qd.soluongloaidonvi + 1
+                });
+                console.log("Quy dinh:", qd);
+                return qd;
+            }
+            return null;
+        }
+        catch (error) {
+            return null;
+        }
+    },
+
+    decreaseUnit: async() =>{
+        try {
+            const qd = await quydinh.findOne({
+                where: {
+                    maquydinh: 1
+                }
+            });
+            if(qd){
+                await qd.update({
+                    soluongloaidonvi: qd.soluongloaidonvi - 1
+                });
+                console.log("Quy dinh:", qd);
+                return qd;
+            }
+            return null;
+        }
+        catch (error) {
+            return null;
+        }
+    },
+
+    increaseInstruction: async() =>{
+        try {
+            const qd = await quydinh.findOne({
+                where: {
+                    maquydinh: 1
+                }
+            });
+            if(qd){
+                await qd.update({
+                    soluongcachdung: qd.soluongcachdung + 1
+                });
+                console.log("Quy dinh:", qd);
+                return qd;
+            }
+            return null;
+        }
+        catch (error) {
+            return null;
+        }
+    },
+
+    decreaseInstruction: async() =>{
+        try {
+            const qd = await quydinh.findOne({
+                where: {
+                    maquydinh: 1
+                }
+            });
+            if(qd){
+                await qd.update({
+                    soluongcachdung: qd.soluongcachdung - 1
+                });
+                console.log("Quy dinh:", qd);
+                return qd;
+            }
+            return null;
+        }
+        catch (error) {
+            return null;
+        }
+    }
 }

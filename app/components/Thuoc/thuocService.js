@@ -1,3 +1,4 @@
+const { where } = require('sequelize');
 const { sequelize } = require('../../models/model.index');
 const { thuoc, donvitinh, cachdungthuoc, cachdung, phieukhambenh, toathuoc } = require('../../models/model.index');
 
@@ -32,7 +33,7 @@ module.exports = {
             LEFT JOIN
                 phieukhambenh ON toathuoc.maphieukham = phieukhambenh.maphieukham
             WHERE
-                phieukhambenh.ngaykham BETWEEN :startDate AND :endDate
+                phieukhambenh.ngaykham BETWEEN :startDate AND :endDate AND phieukhambenh.tinhtrang = true
             GROUP BY
                 thuoc.tenthuoc, donvitinh.tendonvi
             `;
@@ -73,7 +74,7 @@ module.exports = {
                                     as: 'donvitinh',
                                     attributes: [['tendonvi', 'donvithuoc']] // Alias column
                                 }
-                            ]
+                            ], where: { tinhtrang: true }
                         }
                     ]
                 }
@@ -82,6 +83,7 @@ module.exports = {
     },
 
     getThuocs: async () => {
+        //check trinhtrang is true
         return await thuoc.findAll({
             include: [
                 {
@@ -98,37 +100,119 @@ module.exports = {
                         }
                     ]
                 }
-            ]
+            ],
+            where: {tinhtrang: true}
         });
     },
-    getThuocById: async (id) => {
-        return await thuoc.findByPk(id);
+    getThuocById: async (ma) => {
+        return await thuoc.findOne({
+            where: {
+                mathuoc: ma, 
+                tinhtrang: true,
+            },
+        });
     },
     createThuoc: async (data) => {
         return await thuoc.upsert(data);
     },
-    updateThuoc: async (id, data) => {
+    //delete thuoc just set tinhtrang = false
+    deleteThuoc: async (id) => {
         const t = await sequelize.transaction();
-        try{
-
-            const updatedThuoc = await thuoc.update(
-                data, 
+        try {
+            const thuocDeleted = await thuoc.update(
+                { tinhtrang: false },
                 { where: { mathuoc: id }, transaction: t }
             );
             await t.commit();
-            return updatedThuoc;
-
+            return thuocDeleted;
         } catch (error) {
             await t.rollback();
             throw error;
         }
     },
-    deleteThuoc: async (id) => {
+
+    //create or update medicine
+    increaseMedicine: async (data) => {
+        const { tenthuoc, madonvi, soluongnhap, soluongcon, cachdungthuocs, dongia } = data;
+
         const t = await sequelize.transaction();
         try {
-            await thuoc.destroy({ where: { mathuoc: id }, transaction: t });
+            // Create or update the medicine
+            let medicine = await thuoc.findOne({ where: { tenthuoc } });
+            if (medicine) {
+                medicine = await medicine.update({ soluongnhap, madonvi, soluongcon, dongia }, { transaction: t });
+            } else {
+                medicine = await thuoc.create({ tenthuoc, madonvi, soluongnhap, soluongcon, dongia }, { transaction: t });
+            }
+
+            // Update cachdungthuocs with array of cachdungthuocs
+            if (cachdungthuocs && cachdungthuocs.length > 0) {
+                // Xóa tất cả các cách dùng cũ liên quan đến thuốc hiện tại
+                await cachdungthuoc.destroy({
+                    where: { mathuoc: medicine.mathuoc },
+                    transaction : t
+                });
+        
+                // Tạo các cách dùng mới với mathuoc và macachdung
+                const newRecords = cachdungthuocs.map(macachdung => ({
+                    mathuoc: medicine.mathuoc,
+                    macachdung: macachdung
+                }));
+        
+                await cachdungthuoc.bulkCreate(newRecords, { transaction : t });
+            }
+
             await t.commit();
-            return true;
+            return medicine;
+        } catch (error) {
+            await t.rollback();
+            throw error;
+        }
+    },
+    
+    updateThuoc: async (data) => {
+        const { mathuoc, tenthuoc, madonvi, soluongnhap, soluongcon, cachdungthuocs, dongia } = data;
+
+        const t = await sequelize.transaction();
+        try {
+            // Create or update the medicine
+            console.log('mathuoc: services', mathuoc);
+            console.log('tenthuoc: services', tenthuoc);
+            console.log('madonvi: services', madonvi);
+            console.log('soluongnhap: services', soluongnhap);
+            console.log('soluongcon: services', soluongcon);
+            console.log('dongia: services', dongia);
+            console.log('cachdungthuocs: services', cachdungthuocs);
+            
+            let medicine = await thuoc.findOne({ where: { mathuoc } });
+            if (medicine) {
+                await medicine.update(
+                    { tenthuoc, soluongnhap, madonvi, soluongcon, dongia },
+                    { transaction: t }
+                );
+            } else {
+                medicine = await thuoc.create({ tenthuoc, madonvi, soluongnhap, soluongcon, dongia }, { transaction: t });
+            }
+
+            // Update cachdungthuocs with array of cachdungthuocs
+            if (cachdungthuocs && cachdungthuocs.length > 0) {
+                // Xóa tất cả các cách dùng cũ liên quan đến thuốc hiện tại
+                await cachdungthuoc.destroy({
+                    where: { mathuoc: medicine.mathuoc },
+                    transaction : t
+                });
+        
+                // Tạo các cách dùng mới với mathuoc và macachdung
+                const newRecords = cachdungthuocs.map(macachdung => ({
+                    mathuoc: medicine.mathuoc,
+                    macachdung: macachdung
+                }));
+        
+                await cachdungthuoc.bulkCreate(newRecords, { transaction : t });
+            }
+
+            await t.commit();
+            return medicine;
         } catch (error) {
             await t.rollback();
             throw error;
