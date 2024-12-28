@@ -42,6 +42,8 @@ module.exports = {
             quydinh qd
         JOIN 
             thuoc t ON tt.mathuoc = t.mathuoc
+        WHERE
+            pk.trangthai = 'Đã khám'
         GROUP BY 
             TO_CHAR(pk.ngaykham, 'MM-YYYY')
         ORDER BY 
@@ -61,7 +63,7 @@ module.exports = {
         const query = `
             SELECT 
             TO_CHAR(pk.ngaykham, 'DD-MM-YYYY') AS ngay_thang_nam,
-            COUNT(pk.mabenhnhan) AS so_benh_nhan,
+            COUNT (DISTINCT pk.maphieukham) AS so_benh_nhan,
             SUM(tt.soluong * t.dongia) AS doanh_thu_thuoc,
             SUM(qd.tienkham) AS doanh_thu_kham,
             SUM(tt.soluong * t.dongia) + SUM(qd.tienkham) AS tong_doanh_thu
@@ -73,6 +75,8 @@ module.exports = {
             thuoc t ON tt.mathuoc = t.mathuoc
         CROSS JOIN
             quydinh qd
+        WHERE
+            pk.trangthai = 'Đã khám'
         GROUP BY 
             TO_CHAR(pk.ngaykham, 'DD-MM-YYYY')
         ORDER BY 
