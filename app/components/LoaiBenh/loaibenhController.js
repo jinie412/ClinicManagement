@@ -66,9 +66,10 @@ module.exports = {
                 });
             }
 
+            const quydinh = await quydinhService.increaseLoaiBenh();
+
             const newLoaiBenh = await loaibenhService.createLoaiBenh(body);
 
-            const quydinh = await quydinhService.increaseLoaiBenh();
 
             res.status(201).json({
                 success: true,
@@ -139,9 +140,10 @@ module.exports = {
                 });
             }
 
+            const quydinh = await quydinhService.decreaseLoaiBenh();
+            
             const deletedLoaiBenh = await loaibenhService.deleteLoaiBenh(id);
 
-            const quydinh = await quydinhService.decreaseLoaiBenh();
 
             if (deletedLoaiBenh) {
                 res.status(200).json({
