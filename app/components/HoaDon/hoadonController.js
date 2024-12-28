@@ -153,5 +153,39 @@ module.exports = {
                 error: error.message
             });
         }
+    },
+    getDoanhThu: async (req, res) => {
+        try {
+            const doanhthu = await hoadonService.getDoanhThu();
+            res.status(200).json({
+                success: true,
+                message: 'Retrieved list of invoices successfully.',
+                data: doanhthu
+            });
+        } catch (error) {
+            console.error('Error fetching invoices:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Lỗi không lấy được data.',
+                error: error.message
+            });
+        }
+    },
+    getDoanhThuByDay: async (req, res) => {
+        try {
+            const doanhthu = await hoadonService.getDoanhThuByDay();
+            res.status(200).json({
+                success: true,
+                message: 'Retrieved daily revenue successfully.',
+                data: doanhthu
+            });
+        } catch (error) {
+            console.error('Error fetching daily revenue:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to retrieve daily revenue.',
+                error: error.message
+            });
+        }
     }
 };

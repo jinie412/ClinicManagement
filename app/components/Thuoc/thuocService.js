@@ -56,30 +56,37 @@ module.exports = {
 
 
     getPhieuKhamBenhs: async () => {
-        return await phieukhambenh.findAll({
-            attributes: ['ngaykham'],
-            include: [
-                {
-                    model: toathuoc,
-                    as: 'toathuocs',
-                    attributes: ['soluong'],
-                    include: [
-                        {
-                            model: thuoc,
-                            as: 'thuoc',
-                            attributes: ['tenthuoc', 'soluongnhap', 'soluongcon'],
-                            include: [
-                                {
-                                    model: donvitinh,
-                                    as: 'donvitinh',
-                                    attributes: [['tendonvi', 'donvithuoc']] // Alias column
-                                }
-                            ], where: { tinhtrang: true }
-                        }
-                    ]
-                }
-            ],
-        });
+        const query = `
+            SELECT 
+                TO_CHAR(pk.ngaykham, 'MM-YYYY') AS thang_nam,
+                t.tenthuoc,
+                SUM(tt.soluong) AS tong_so_luong,
+                t.soluongnhap,
+                t.soluongcon,
+                dvt.tendonvi AS donvithuoc
+            FROM 
+                phieukhambenh pk
+            JOIN 
+                toathuoc tt ON pk.maphieukham = tt.maphieukham
+            JOIN 
+                thuoc t ON tt.mathuoc = t.mathuoc
+            JOIN 
+                donvitinh dvt ON t.madonvi = dvt.madonvi
+            WHERE 
+                t.tinhtrang = true
+            GROUP BY 
+                thang_nam, t.tenthuoc, t.soluongnhap, t.soluongcon, dvt.tendonvi
+            ORDER BY
+            t.tenthuoc ASC
+        `;
+    
+        try {
+            const [results] = await sequelize.query(query);
+            return results; // Trả về kết quả dưới dạng mảng
+        } catch (error) {
+            console.error('Error executing raw SQL query:', error);
+            throw error;
+        }
     },
 
     getThuocs: async () => {

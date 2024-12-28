@@ -4,6 +4,10 @@ const router = express.Router();
 
 // GET METHOD
 router.get('/', hoadonController.getHoaDons);
+router.get('/doanhthu', hoadonController.getDoanhThu);
+router.get('/doanhthu-by-day', hoadonController.getDoanhThuByDay);
+
+
 router.get('/:id', hoadonController.getHoaDonById);
 
 // POST METHOD
