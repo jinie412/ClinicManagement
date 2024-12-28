@@ -293,5 +293,43 @@ module.exports = {
                 error: error.message
             });
         }
+    },
+
+    // PUT /api/thuoc/update/:id
+    updateThuocById: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const body = req.body;
+    
+            if (!id) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'ID is required to update medicine.'
+                });
+            }
+    
+            // Update medicine in table thuoc
+            const updatedMedicine = await thuocService.updateThuocById(id, body);
+    
+            if (updatedMedicine) {
+                res.status(200).json({
+                    success: true,
+                    message: 'Medicine updated successfully.',
+                    data: updatedMedicine
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    message: `Medicine with ID ${id} not found.`
+                });
+            }
+        } catch (error) {
+            console.error('Error updating medicine:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to update medicine.',
+                error: error.message
+            });
+        }
     }
 }

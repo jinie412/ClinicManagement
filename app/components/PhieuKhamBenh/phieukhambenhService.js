@@ -73,7 +73,7 @@ module.exports = {
                 tt.mathuoc,tt.soluong,
                 t.tenthuoc, t.soluongnhap, t.soluongcon,t.dongia,
                 dv.tendonvi,
-                cd.motacachdung
+                cd.motacachdung, cd.macachdung
             FROM
                 toathuoc tt
             LEFT JOIN 

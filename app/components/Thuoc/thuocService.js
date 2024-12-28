@@ -177,50 +177,16 @@ module.exports = {
         }
     },
     
-    updateThuoc: async (data) => {
-        const { mathuoc, tenthuoc, madonvi, soluongnhap, soluongcon, cachdungthuocs, dongia } = data;
-
-        const t = await sequelize.transaction();
-        try {
-            // Create or update the medicine
-            console.log('mathuoc: services', mathuoc);
-            console.log('tenthuoc: services', tenthuoc);
-            console.log('madonvi: services', madonvi);
-            console.log('soluongnhap: services', soluongnhap);
-            console.log('soluongcon: services', soluongcon);
-            console.log('dongia: services', dongia);
-            console.log('cachdungthuocs: services', cachdungthuocs);
-            
-            let medicine = await thuoc.findOne({ where: { mathuoc } });
-            if (medicine) {
-                await medicine.update(
-                    { tenthuoc, soluongnhap, madonvi, soluongcon, dongia },
-                    { transaction: t }
-                );
-            } else {
-                medicine = await thuoc.create({ tenthuoc, madonvi, soluongnhap, soluongcon, dongia }, { transaction: t });
+    updateThuocById: async (id, data) => {
+        const t = await sequelize.transaction();   
+        try{
+            const thuocUpdated = await thuoc.update(data, { where: { mathuoc: id }, transaction: t });
+            if (thuocUpdated) {
+                await t.commit();
+                return thuocUpdated;
             }
-
-            // Update cachdungthuocs with array of cachdungthuocs
-            if (cachdungthuocs && cachdungthuocs.length > 0) {
-                // Xóa tất cả các cách dùng cũ liên quan đến thuốc hiện tại
-                await cachdungthuoc.destroy({
-                    where: { mathuoc: medicine.mathuoc },
-                    transaction : t
-                });
-        
-                // Tạo các cách dùng mới với mathuoc và macachdung
-                const newRecords = cachdungthuocs.map(macachdung => ({
-                    mathuoc: medicine.mathuoc,
-                    macachdung: macachdung
-                }));
-        
-                await cachdungthuoc.bulkCreate(newRecords, { transaction : t });
-            }
-
-            await t.commit();
-            return medicine;
-        } catch (error) {
+            return null;
+        }catch{
             await t.rollback();
             throw error;
         }
