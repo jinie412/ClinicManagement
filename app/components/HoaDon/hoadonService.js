@@ -31,17 +31,15 @@ module.exports = {
         const query = `
         SELECT 
             TO_CHAR(pk.ngaykham, 'MM-YYYY') AS thang_nam,
-            SUM(tt.soluong * t.dongia) AS doanh_thu_thuoc,
+            SUM(hd.tongtien) - (COUNT(DISTINCT pk.maphieukham) * qd.tienkham) AS doanh_thu_thuoc,
             COUNT(DISTINCT pk.maphieukham) * qd.tienkham AS doanh_thu_kham,
-            SUM(tt.soluong * t.dongia) + (COUNT(DISTINCT pk.maphieukham) * qd.tienkham) AS tong_doanh_thu
+            SUM(hd.tongtien) AS tong_doanh_thu
         FROM 
             phieukhambenh pk
         JOIN 
-            toathuoc tt ON pk.maphieukham = tt.maphieukham
-        JOIN 
             quydinh qd ON true
         JOIN 
-            thuoc t ON tt.mathuoc = t.mathuoc
+            hoadon hd ON hd.maphieukham = pk.maphieukham
         WHERE
             pk.trangthai = 'Đã khám'
         GROUP BY 
@@ -64,15 +62,13 @@ module.exports = {
             SELECT 
             TO_CHAR(pk.ngaykham, 'DD-MM-YYYY') AS ngay_thang_nam,
             COUNT (DISTINCT pk.maphieukham) AS so_benh_nhan,
-            SUM(tt.soluong * t.dongia) AS doanh_thu_thuoc,
+            SUM(hd.tongtien) - (COUNT(DISTINCT pk.maphieukham) * qd.tienkham) AS doanh_thu_thuoc,
             COUNT(DISTINCT pk.maphieukham) * qd.tienkham AS doanh_thu_kham,
-            SUM(tt.soluong * t.dongia) + (COUNT(DISTINCT pk.maphieukham) * qd.tienkham) AS tong_doanh_thu
+            SUM(hd.tongtien) AS tong_doanh_thu
         FROM 
             phieukhambenh pk
         JOIN 
-            toathuoc tt ON pk.maphieukham = tt.maphieukham
-        JOIN 
-            thuoc t ON tt.mathuoc = t.mathuoc
+            hoadon hd ON hd.maphieukham = pk.maphieukham
         JOIN 
             quydinh qd ON true
         WHERE
