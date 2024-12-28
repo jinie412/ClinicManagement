@@ -188,7 +188,7 @@ exports.getBenhNhanById = async (id) => {
 // Tạo bệnh nhân mới
 exports.createBenhNhan = async (data) => {
     const renamedData = renameKeys(data, keyMapEngToVi);
-    const newBenhNhan = await benhnhan.create(renamedData);
+    const newBenhNhan = await benhnhan.upsert(renamedData);
     return newBenhNhan;
     // return renameKeys(newBenhNhan.toJSON(), keyMapViToEng);
 };

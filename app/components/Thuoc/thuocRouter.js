@@ -11,6 +11,7 @@ router.get('/:id', thuocController.getThuocById);
 router.post('/increaseMedicine', thuocController.increaseMedicine);
 
 router.put('/update', thuocController.updateThuoc);
+router.put('/update/:id', thuocController.updateThuocById);
 
 router.delete('/delete/:id', thuocController.deleteThuoc);
 
