@@ -123,7 +123,7 @@ module.exports = {
             if (result) {
                 res.status(200).json({
                     success: true,
-                    data: quydinh,
+                    data: result,
                     message: 'Deleted use successfully.'
                 });
             } else {
