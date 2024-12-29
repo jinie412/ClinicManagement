@@ -94,7 +94,7 @@ module.exports = {
     getChiTietPhieuKham: async () => {
         const query =`
             SELECT
-                pkb.maphieukham, pkb.ngaykham, pkb.trieuchung, 
+                pkb.maphieukham, pkb.ngaykham, pkb.trieuchung, pkb.trangthai,
                 bs.hoten as tenbacsi,
                 bn.mabenhnhan, bn.hoten, bn.diachi, bn.sodienthoai, bn.ngaysinh, bn.gioitinh,
                 lb.tenloaibenh
@@ -108,6 +108,8 @@ module.exports = {
                 loaibenhtrongphieukham lbpk ON pkb.maphieukham = lbpk.maphieukham
             LEFT JOIN
                 loaibenh lb ON lbpk.maloaibenh = lb.maloaibenh
+            WHERE 
+                pkb.trangthai = 'Đã khám'
             ORDER BY
                 pkb.ngaykham DESC
         `;
