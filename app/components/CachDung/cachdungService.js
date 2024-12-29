@@ -21,14 +21,17 @@ module.exports = {
     deleteCachDung: async (id) => {
         try {
             const cachdungRecord = await cachdung.findByPk(id);
-            await quydinhService.decreaseInstruction();
             if (cachdungRecord) {
-                return await cachdungRecord.destroy();
+                const deletedRecord = await cachdungRecord.destroy();
+                if (deletedRecord) {
+                    await quydinhService.decreaseInstruction();
+                    return deletedRecord;
+                }
             }
             return null;
         } catch (error) {
+            console.error("Error deleting cachdung:", error);
             return null;
         }
-        
     }
 }

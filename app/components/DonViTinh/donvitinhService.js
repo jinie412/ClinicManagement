@@ -18,18 +18,23 @@ module.exports = {
         }
         return null;
     },
-    deleteDonViTinh: async(id) =>{
+    deleteDonViTinh: async (id) => {
         try {
             const dvt = await donvitinh.findByPk(id);
-            await quydinhService.decreaseUnit();
-            if(dvt){
-                return await dvt.destroy();
+            if (dvt) {
+                const deletedUnit = await dvt.destroy();
+                if (deletedUnit) {
+                    await quydinhService.decreaseUnit();
+                    return deletedUnit;
+                }
             }
             return null;
         } catch (error) {
+            console.error("Error deleting donvitinh:", error);
             return null;
         }
     },
+        
     getDonViTinhByTen: async(ten) =>{
         return await donvitinh.findOne({
             where: {tendonvi: ten}
