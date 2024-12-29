@@ -1,3 +1,4 @@
+const e = require('express');
 const {bacsi, taikhoan } = require('../../models/model.index');
 
 module.exports = {
@@ -48,6 +49,26 @@ module.exports = {
         const account = await taikhoan.findOne({ where: { tentaikhoan: username } });
         if (account) {
             return await account.update({ matkhau: newPassword });
+        }
+        return null;
+    },
+    updateAvatar: async (id, avatarUrl) => {
+        const doctor = await bacsi.findByPk(id);
+        if (doctor) {
+            doctor.anhdaidien = avatarUrl;
+            await doctor.save();
+            return doctor;
+        }
+        else {
+            console.log("Doctor not found");
+            return null;
+        }
+    },
+
+    getAvatar: async (id) => {
+        const doctor = await bacsi.findByPk(id);
+        if (doctor) {
+            return doctor.anhdaidien;
         }
         return null;
     },

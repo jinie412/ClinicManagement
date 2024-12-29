@@ -45,7 +45,12 @@ module.exports = (sequelize, DataTypes) => {
         model: 'taikhoan',
         key: 'tentaikhoan'
       }
-    }
+    },
+    //ảnh đại diện
+    anhdaidien: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
   }, {
     tableName: 'bacsi',
     timestamps: false

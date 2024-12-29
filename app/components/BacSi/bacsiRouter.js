@@ -4,6 +4,10 @@ const router = express.Router();
 
 router.post('/login', bacsiController.login);
 router.put('/change-password', bacsiController.changePassword);
+//anh dai dien
+router.post('/upload-avatar', bacsiController.uploadAvatar);
+
+router.get('/avatar', bacsiController.getAvatar);
 
 router.get('/', bacsiController.getBacSis);
 

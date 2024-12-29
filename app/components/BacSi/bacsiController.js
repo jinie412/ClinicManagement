@@ -1,4 +1,5 @@
 const bacsiService = require('./bacsiService');
+const upload = require('../../config/multerConfig');
 
 module.exports = {
     // GET /api/bac-si/login
@@ -218,14 +219,14 @@ module.exports = {
     changePassword: async (req, res) => {
         try {
             const { username, currentPassword, newPassword } = req.body;
-    
+
             if (!username || !currentPassword || !newPassword) {
                 return res.status(400).json({
                     success: false,
                     message: 'Username, current password, and new password are required.'
                 });
             }
-    
+
             // Verify the current password
             const account = await bacsiService.login({ username, password: currentPassword });
             if (!account) {
@@ -234,7 +235,7 @@ module.exports = {
                     message: 'Current password is incorrect.'
                 });
             }
-    
+
             // Change the password
             const result = await bacsiService.changePassword(username, newPassword);
             if (result) {
@@ -253,6 +254,80 @@ module.exports = {
             res.status(500).json({
                 success: false,
                 message: 'Failed to change password.',
+                error: error.message
+            });
+        }
+    },
+
+    uploadAvatar: async (req, res) => {
+        try {
+            const singleUpload = upload.single('avatar');
+            singleUpload(req, res, async (err) => {
+                if (err) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Error uploading file',
+                        error: err.message,
+                    });
+                }
+
+                const file = req.file;
+                if (!file) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'No file uploaded.',
+                    });
+                }
+
+                const avatarUrl = file.path;
+
+                const bacsi = await bacsiService.updateAvatar(req.body.id, avatarUrl);
+
+                if (!bacsi) {
+                    return res.status(404).json({
+                        success: false,
+                        message: 'Doctor not found.'
+                    })
+                }
+                return res.status(200).json({
+                    success: true,
+                    message: 'Uploaded avatar successfully.',
+                    data: bacsi
+                });
+            });
+        } catch (error) {
+            console.error('Error uploading avatar:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Failed to upload avatar.',
+                error: error.message,
+            });
+        }
+    },
+
+
+    //get avatar
+
+    getAvatar: async (req, res) => {
+        try {
+            const id = 1;
+            const result = await bacsiService.getAvatar(id);
+            if (result) {
+                return res.status(200).json({
+                    success: true,
+                    message: 'Retrieved avatar successfully.',
+                    data: result
+                });
+            }
+            return res.status(404).json({
+                success: false,
+                message: 'Doctor not found.'
+            });
+        } catch (error) {
+            console.error('Error fetching avatar:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to retrieve avatar.',
                 error: error.message
             });
         }
