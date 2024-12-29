@@ -1,4 +1,5 @@
-const {donvitinh} = require('../../models/model.index');
+const {donvitinh, quydinh} = require('../../models/model.index');
+const quydinhService = require('../QuyDinh/quydinhService');
 
 module.exports = {
     getDonViTinhs: async() =>{
@@ -18,11 +19,16 @@ module.exports = {
         return null;
     },
     deleteDonViTinh: async(id) =>{
-        const dvt = await donvitinh.findByPk(id);
-        if(dvt){
-            return await dvt.destroy();
+        try {
+            const dvt = await donvitinh.findByPk(id);
+            await quydinhService.decreaseUnit();
+            if(dvt){
+                return await dvt.destroy();
+            }
+            return null;
+        } catch (error) {
+            return null;
         }
-        return null;
     },
     getDonViTinhByTen: async(ten) =>{
         return await donvitinh.findOne({

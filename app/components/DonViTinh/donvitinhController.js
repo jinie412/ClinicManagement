@@ -143,8 +143,6 @@ module.exports = {
                     message: 'ID is required to delete the unit.'
                 });
             }
-
-            quydinhService.decreaseUnit();
             
             const result = await donvitinhService.deleteDonViTinh(id);
 

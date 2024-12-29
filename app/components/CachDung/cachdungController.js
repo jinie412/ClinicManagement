@@ -48,7 +48,7 @@ module.exports = {
 
             res.status(201).json({
                 success: true,
-                data: cachdung,quydinh,
+                data: cachdung,
                 message: 'Created use successfully.'
             });
         } catch (error) {
@@ -116,8 +116,6 @@ module.exports = {
                     message: 'ID is required to delete use.'
                 });
             }
-
-            const quydinh = await quydinhService.decreaseInstruction();
 
             const result = await cachdungService.deleteCachDung(id);
 

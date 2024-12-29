@@ -1,4 +1,5 @@
 const {cachdung} = require('../../models/model.index');
+const quydinhService = require('../QuyDinh/quydinhService');
 
 module.exports = {
     getCachDungs: async () => {
@@ -18,11 +19,16 @@ module.exports = {
         return null;
     },
     deleteCachDung: async (id) => {
-        const cachdungRecord = await cachdung.findByPk(id);
-        if (cachdungRecord) {
-            await cachdungRecord.destroy();
-            return true;
+        try {
+            const cachdungRecord = await cachdung.findByPk(id);
+            await quydinhService.decreaseInstruction();
+            if (cachdungRecord) {
+                return await cachdungRecord.destroy();
+            }
+            return null;
+        } catch (error) {
+            return null;
         }
-        return false;
+        
     }
 }
